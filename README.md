@@ -1,2 +1,2 @@
-# ECE528_Assignments
-Code I made within scope of ECE528 Winter 2021 assignments
+# ECE528 Assignments
+The repository holds all code created by Michael Bowyer <mbowyer@umich.edu> within scope of the ECE528 assignments.
