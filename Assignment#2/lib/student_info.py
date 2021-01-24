@@ -1,6 +1,5 @@
 import csv
 
-
 class Students:
     def __init__(self, studentInfoFilePath):
         self.studentInfoFilePath = studentInfoFilePath
@@ -10,7 +9,7 @@ class Students:
     def read_in_student_info(self):
         file = csv.reader(open(self.studentInfoFilePath), delimiter=',')
         for line in file:
-            print(line)
+            # print(line)
             newStudent = Student(line)
             self.students.append(newStudent)
 
