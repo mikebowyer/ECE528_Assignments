@@ -25,6 +25,10 @@ if __name__ == '__main__':
     #3. Download Images and update students image file path
     download_imgs.download_images_update_students(studentInfos, outputImgDir)
 
+    #4. Sort students based on last name
+    studentInfos.students.sort(key=lambda x: x.lastname)
+
+    #5. Display images
     print("Hello world!")
 
 
