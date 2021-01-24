@@ -18,7 +18,7 @@ if __name__ == '__main__':
     print("Saving downloaded images to: {}".format(outputImgDir))
 
     #2. Read in csv file
-    student_info.Students(studentListFilePath)
+    students = student_info.Students(studentListFilePath)
 
 
     #3. Download Images locally

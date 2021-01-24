@@ -11,11 +11,13 @@ class Students:
         file = csv.reader(open(self.studentInfoFilePath), delimiter=',')
         for line in file:
             print(line)
+            newStudent = Student(line)
+            self.students.append(newStudent)
 
 
 class Student:
-    def __init__(self, lastname, firstname, url):
-        self.lastname = lastname
-        self.firstname = firstname
-        self.imgUrl = url
+    def __init__(self, studentInfo):
+        self.lastname = studentInfo[0]
+        self.firstname = studentInfo[1]
+        self.imgUrl = studentInfo[2]
         self.imgPath = ""
