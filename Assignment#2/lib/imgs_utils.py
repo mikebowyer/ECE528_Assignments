@@ -1,6 +1,7 @@
 import requests  # to get image from the web
 import shutil  # to save it locally
-import os
+import os, math
+import matplotlib.pyplot as plt
 
 
 def download_images_update_students(studentInfo, outputImgDir):
@@ -13,6 +14,7 @@ def download_images_update_students(studentInfo, outputImgDir):
         filepath = os.path.join(outputImgDir, filename)
         if os.path.exists(filepath):
             print("Image for {} {} already exists, skipping".format(student.firstname, student.lastname))
+            student.imgPath = filepath
             continue
 
         # Open the url image, set stream to True, this will return the stream content.
@@ -33,3 +35,21 @@ def download_images_update_students(studentInfo, outputImgDir):
             returnval = False
             break
     return returnval
+
+def plot_all_students(studentInfo):
+    numStudents = len(studentInfo.students)
+    numRowsCols = math.ceil(numStudents / 2)
+
+    fig = plt.figure()
+    i = 1
+    for student in studentInfo.students:
+        # plt.subplot(numRowsCols, numRowsCols, i)
+        img = plt.imread(studentInfo.students[i-1].imgPath)
+        ax = fig.add_subplot(numRowsCols + 1, numRowsCols, i)
+        ax.set_axis_off()
+        ax.text(75, 170, str(student.firstname +" "+ student.lastname),
+                fontsize=18, ha='center')
+        ax.imshow(img)
+        i += 1
+
+    fig.show()
