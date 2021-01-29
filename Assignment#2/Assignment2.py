@@ -23,13 +23,13 @@ if __name__ == '__main__':
     studentInfos = student_info.Students(studentListFilePath)
 
     #3. Download Images and update students image file path
-    imgs_utils.download_images_update_students(studentInfos, outputImgDir)
+    validStudents = imgs_utils.download_images_update_students(studentInfos, outputImgDir)
 
     #4. Sort students based on last name
-    studentInfos.students.sort(key=lambda x: x.lastname)
+    validStudents.sort(key=lambda x: x.lastname)
 
     #5. Display images
-    imgs_utils.plot_all_students(studentInfos)
+    imgs_utils.plot_all_students(validStudents)
 
 
 

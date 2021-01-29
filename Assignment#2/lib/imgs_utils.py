@@ -5,17 +5,23 @@ import matplotlib.pyplot as plt
 
 
 def download_images_update_students(studentInfo, outputImgDir):
-    returnval = False
-    for student in studentInfo.students:
+    #Delete all existing files in output dir
+    filelist = [f for f in os.listdir(outputImgDir)]
+    for f in filelist:
+        os.remove(os.path.join(outputImgDir, f))
+
+    validStudentList = []
+    for i, student in enumerate(studentInfo.students):
 
         # check if file name already exists in outputImgDir
         image_url = student.imgUrl
         filename = image_url.split("/")[-1]
         filepath = os.path.join(outputImgDir, filename)
         if os.path.exists(filepath):
-            print("Image for {} {} already exists, skipping".format(student.firstname, student.lastname))
+            print("Image name for {} {} already exists, renaming".format(student.firstname, student.lastname))
+            filename = student.firstname + "_" + student.lastname + "_" + filename
+            filepath = os.path.join(outputImgDir, filename)
             student.imgPath = filepath
-            continue
 
         # Open the url image, set stream to True, this will return the stream content.
         r = requests.get(image_url, stream=True)
@@ -28,28 +34,29 @@ def download_images_update_students(studentInfo, outputImgDir):
                 shutil.copyfileobj(r.raw, f)
 
             print('Image for {} {} sucessfully Downloaded: {}'.format(student.firstname, student.lastname, filename))
-            returnval=True
             student.imgPath = filepath
+            validStudentList.append(student)
         else:
             print("ERROR: Image for {} {} couldn't be retrieved.".format(student.firstname, student.lastname, filename))
-            returnval = False
-            break
-    return returnval
+    return validStudentList
 
-def plot_all_students(studentInfo):
-    numStudents = len(studentInfo.students)
-    numRowsCols = math.ceil(numStudents / 2)
+def plot_all_students(validStudents):
+    numStudents = len(validStudents)
+    numRowsCols = math.ceil(math.sqrt(numStudents))
 
     fig = plt.figure()
+    plt.cla()
+    plt.clf()
     i = 1
-    for student in studentInfo.students:
+    for student in validStudents:
         # plt.subplot(numRowsCols, numRowsCols, i)
-        img = plt.imread(studentInfo.students[i-1].imgPath)
+        img = plt.imread(validStudents[i-1].imgPath)
         ax = fig.add_subplot(numRowsCols + 1, numRowsCols, i)
         ax.set_axis_off()
         ax.text(75, 170, str(student.firstname +" "+ student.lastname),
-                fontsize=18, ha='center')
+                fontsize=6, ha='center')
         ax.imshow(img)
         i += 1
 
     fig.show()
+    fig.savefig('students.png')
