@@ -5,9 +5,11 @@ from lib import student_info
 from lib import imgs_utils
 
 
+
 parser = argparse.ArgumentParser(description='Read in student list csv file, then plot all head shots with names')
 parser.add_argument('--student-list', help='path to student list')
 parser.add_argument('--output-image-dir', help='Where to save images')
+parser.add_argument('-fd','--run-face-detection',action='store_true', help='Do you want to look at facial detection for each student image?')
 
 if __name__ == '__main__':
     #1. Grab argument of location of image, and master information csv
@@ -30,6 +32,9 @@ if __name__ == '__main__':
 
     #5. Display images
     imgs_utils.plot_all_students(validStudents)
+
+    if(args.run_face_detection):
+        imgs_utils.runFacialDetection(validStudents)
 
 
 
