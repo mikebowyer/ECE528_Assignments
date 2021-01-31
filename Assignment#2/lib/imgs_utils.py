@@ -43,7 +43,8 @@ def download_images_update_students(studentInfo, outputImgDir):
 
 def plot_all_students(validStudents):
     numStudents = len(validStudents)
-    numRowsCols = math.ceil(math.sqrt(numStudents))
+    numCols = math.ceil(math.sqrt(numStudents))
+    numRows = numCols - 1
 
     fig = plt.figure()
     plt.cla()
@@ -52,7 +53,7 @@ def plot_all_students(validStudents):
     for student in validStudents:
         # plt.subplot(numRowsCols, numRowsCols, i)
         img = plt.imread(validStudents[i-1].imgPath)
-        ax = fig.add_subplot(numRowsCols + 1, numRowsCols, i)
+        ax = fig.add_subplot(numRows, numCols, i)
         ax.set_axis_off()
         ax.text(75, 170, str(student.firstname +" "+ student.lastname),
                 fontsize=6, ha='center')
