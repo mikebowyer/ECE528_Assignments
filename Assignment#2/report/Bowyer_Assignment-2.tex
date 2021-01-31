@@ -8,13 +8,14 @@
 \usepackage[margin=1in]{geometry}
 \usepackage{mathtools}
 \usepackage{amsmath}
+\usepackage{hyperref}
 
 \title{ECE 528: Cloud Computing \\
 	\vspace{1.5cm}
    		\begin{center}\includegraphics{umlogo} \end{center}
 	\vspace{1.5cm}
 	\textbf{Assignment \#3} \\
-Average and Standard Deviation}
+Python Image Download and Display}
 	
 \author{Michael Bowyer}
 
@@ -49,33 +50,13 @@ Average and Standard Deviation}
 
 \section{Statement of the Problem}
 
-The problem to be solved is to present a matrix of images using python. This matrix of images contains images of students who are currently participating in ECE 528 Winter semester. The matrix is to be generated using a simple text file which contains entries student names and a URL where they have posted a photo of themselves. The result is a matrix of these images with the students name underneath the image. 
+The problem to be solved is to present a matrix of images using python. This matrix of images contains images of students who are currently participating in ECE 528 Winter semester. The matrix is to be generated using a simple text file which contains entries student names and a URL where they have posted a photo of themselves. The result is a matrix of these images with the students name underneath the image.
 
 Some problems:
 - Students had incorrect URLs
 - Students had images of the same file name
 
 \section{Description of Solution}
-
-Given a data set \( x = [x_1 x_2 x_3 ... x_n]\), the average value \( \mu \) is given by
-
-\[
-	\mu = \frac{1}{n}[x_1 + x_2 + x_3 + ... x_n] = \frac{1}{n}\sum_{i=1}^n x_i
-\]
-
-The variance \( VAR \), which measures how much the data differs from the average is given by:
-
-\[
-	VAR = \frac{1}{n}[(x_1-\mu)^2 + (x_2-\mu)^2 + ... (x_n-\mu)^2] = \frac{1}{n}\sum_{i=1}^n (x_i-\mu)^2
-\]
-
-Finally, the standard deviation is given by the square root of the variance:
-
-\[
-	\sigma = \sqrt{VAR}
-\]
-
-Since we are interested in test scores, I will assume that the data consist of integers, and hence will use an \textit{n}-dimensional int array to store the \textit{n} values. To solve this problem, I created 3 functions:
 
 \singlespacing
 \begin{lstlisting}
@@ -113,118 +94,10 @@ I verified by hand that the results are correct. Note that although I tested on 
 \pagebreak
 
 \section{Code}
-\singlespacing
 
-\begin{lstlisting}
+All code generated within scope of this assignment can be found in the Assignment 2 folder in the GitHub repository:
+\url{https://github.com/mikebowyer/ECE528_Assignments}.
 
-/*-------------------------
-Author: Paul Watta
-Date: September 23, 2020
-Assignment #7
---------------------------*/
-
-#include <stdio.h>
-#include <stdlib.h>
-#include <math.h>
-#include <time.h>
-
-#define N_MAX 1000   //Maximum Array Size
-
-/* SETUP RAND SCORES  */
-
-void setupRandScores(int n, int x[], int min, int max)
-{
-	int i;
-
-	for (i = 0; i < n; i++)
-	{
-		x[i] = min + rand() % (max - min + 1);
-	}
-}
-
-/*  GET AVE  */
-
-float getAve(int n, int x[])
-{
-	int i;
-	float sum, ave;
-
-	sum = 0;
-	for (i = 0; i < n; i++)
-	{
-		sum += x[i];
-	}
-
-	ave = (float)sum / (float)n;
-	return(ave);
-
-}
-
-/* GET STD DEV  */
-
-float getStdDev(int n, int x[])
-{
-	int i;
-	float sum, ave, var, std_dev;
-
-	ave = getAve(n, x);
-
-	sum = 0;
-	for (i = 0; i < n; i++)
-	{
-		sum += (x[i] - ave) * (x[i] - ave);
-	}
-
-	var = (float)sum / (float)n;
-	std_dev = sqrt(var);
-
-	return(std_dev);
-}
-
-/*  PRINT ARRAY */
-
-void printArray(int n, int x[], char label[])
-{
-	int i;
-
-	printf("\n%s: ", label);
-	for (i = 0; i < n; i++)
-	{
-		printf("%d ", x[i]);
-	}
-}
-\end{lstlisting}
-
-\pagebreak
-\begin{lstlisting}
-/*  MAIN  */
-
-int main()
-{
-	srand(time(NULL));
-
-	int grades[N_MAX];
-
-	int numStudents = 10;
-
-	float average, stdDev;
-
-	setupRandScores(numStudents, grades, 50, 100);
-	average = getAve(numStudents, grades);
-	stdDev = getStdDev(numStudents, grades);
-
-	printArray(numStudents, grades,"Grades");
-
-	printf("\nNumber of Students: %d", numStudents);
-	printf("\n           Average: %.2f", average);
-	printf("\n.     Standard Dev: %.2f\n", stdDev);
-
-	system("PAUSE");
-
-	return 0;
-}
-
-\end{lstlisting}
 
 \end{document}
 
