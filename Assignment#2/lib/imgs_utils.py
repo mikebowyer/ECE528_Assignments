@@ -19,7 +19,7 @@ def download_images_update_students(studentInfo, outputImgDir):
         filename = image_url.split("/")[-1]
         filepath = os.path.join(outputImgDir, filename)
         if os.path.exists(filepath):
-            print("Image name for {} {} already exists, renaming".format(student.firstname, student.lastname))
+            print("DEBUG: Image name for {} {} already exists, renaming".format(student.firstname, student.lastname))
             filename = student.firstname + "_" + student.lastname + "_" + filename
             filepath = os.path.join(outputImgDir, filename)
             student.imgPath = filepath
@@ -34,7 +34,7 @@ def download_images_update_students(studentInfo, outputImgDir):
             with open(filepath, 'wb') as f:
                 shutil.copyfileobj(r.raw, f)
 
-            print('Image for {} {} sucessfully Downloaded: {}'.format(student.firstname, student.lastname, filename))
+            print('DEBUG: Image for {} {} sucessfully Downloaded: {}'.format(student.firstname, student.lastname, filename))
             student.imgPath = filepath
             validStudentList.append(student)
         else:
@@ -78,7 +78,7 @@ def runFacialDetection(validStudents):
             flags=cv2.CASCADE_SCALE_IMAGE
         )
 
-        print("Found {0} faces!".format(len(faces)))
+        print("DEBUG: Found {0} faces!".format(len(faces)))
 
         # Draw a rectangle around the faces
         for (x, y, w, h) in faces:

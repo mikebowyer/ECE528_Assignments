@@ -130,9 +130,7 @@ dmypy.json
 .pyre/
 
 #Images
-*.png
-*.jpg
-*.jpeg
+Assignment#2/StudentImages/
 
 #Latex related
 *.aux
