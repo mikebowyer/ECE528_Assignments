@@ -128,3 +128,14 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+#Images
+*.png
+*.jpg
+*.jpeg
+
+#Latex related
+*.aux
+*.fdb_latexmk
+*.fls
+*.gz

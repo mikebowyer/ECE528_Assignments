@@ -1,0 +1,230 @@
+\documentclass[12pt, letterpaper, final, onecolumn, titlepage] {article}
+
+\usepackage{enumerate}
+\usepackage{graphicx}
+\usepackage{listings}
+\usepackage{color}
+\usepackage{setspace}
+\usepackage[margin=1in]{geometry}
+\usepackage{mathtools}
+\usepackage{amsmath}
+
+\title{ECE 528: Cloud Computing \\
+	\vspace{1.5cm}
+   		\begin{center}\includegraphics{umlogo} \end{center}
+	\vspace{1.5cm}
+	\textbf{Assignment \#3} \\
+Average and Standard Deviation}
+	
+\author{Michael Bowyer}
+
+\date{\today}
+
+\definecolor{dkgreen}{rgb}{0,0.6,0}
+\definecolor{gray}{rgb}{0.5,0.5,0.5}
+\definecolor{mauve}{rgb}{0.58,0,0.82}
+
+\lstset{frame=tb,
+  language=C,
+  aboveskip=3mm,
+  belowskip=3mm,
+  showstringspaces=false,
+  columns=flexible,
+  basicstyle={\small\ttfamily},
+  numbers=none,
+  numberstyle=\tiny\color{gray},
+  keywordstyle=\color{blue},
+  commentstyle=\color{dkgreen},
+  stringstyle=\color{mauve},
+  breaklines=true,
+  breakatwhitespace=true,
+  tabsize=3
+}
+
+\begin{document}
+
+\maketitle
+
+\doublespacing
+
+\section{Statement of the Problem}
+
+The problem to be solved is to present a matrix of images using python. This matrix of images contains images of students who are currently participating in ECE 528 Winter semester. The matrix is to be generated using a simple text file which contains entries student names and a URL where they have posted a photo of themselves. The result is a matrix of these images with the students name underneath the image. 
+
+Some problems:
+- Students had incorrect URLs
+- Students had images of the same file name
+
+\section{Description of Solution}
+
+Given a data set \( x = [x_1 x_2 x_3 ... x_n]\), the average value \( \mu \) is given by
+
+\[
+	\mu = \frac{1}{n}[x_1 + x_2 + x_3 + ... x_n] = \frac{1}{n}\sum_{i=1}^n x_i
+\]
+
+The variance \( VAR \), which measures how much the data differs from the average is given by:
+
+\[
+	VAR = \frac{1}{n}[(x_1-\mu)^2 + (x_2-\mu)^2 + ... (x_n-\mu)^2] = \frac{1}{n}\sum_{i=1}^n (x_i-\mu)^2
+\]
+
+Finally, the standard deviation is given by the square root of the variance:
+
+\[
+	\sigma = \sqrt{VAR}
+\]
+
+Since we are interested in test scores, I will assume that the data consist of integers, and hence will use an \textit{n}-dimensional int array to store the \textit{n} values. To solve this problem, I created 3 functions:
+
+\singlespacing
+\begin{lstlisting}
+
+void setupTestScores(int n, int x[], int min, int max)
+float getAve(int n, int x[])
+float getStdDev(int n, int x[])
+void printArray(int n, int x[], char label[])
+
+\end{lstlisting}
+\doublespacing
+
+The function \texttt{setupTestScores} creates N random numbers between 50 and 100 and stores the results in the array \texttt{x[]}. The functions \texttt{getAve} and \texttt{getStdDev} compute and return the average and standard deviation, respectively. In both functions, \texttt{x[]} is the incoming data array and \texttt{n} is the dimension of the array. The main programming construct used here is a FOR loop to compute the required sums. Finally, a \texttt{main()} function was written to create the data and call the functions.
+
+\section{Testing and Output}
+
+To test the program, I tried 2 data sets of test scores with \(n = 10\) and \(n = 20\) students. The results are shown below:
+
+\singlespacing
+\begin{lstlisting}
+ Test Scores: 91 55 60 81 94 66 53 83 84 85 
+           n: 10
+     Average: 75.20
+Standard Dev: 15.23
+
+ Test Scores: 58 93 59 77 74 84 64 69 54 69 63 68 91 90 53
+           n: 15
+     Average: 71.07
+Standard Dev: 13.40
+\end{lstlisting}
+\doublespacing
+
+I verified by hand that the results are correct. Note that although I tested on 2 relatively small data sets, the program will work for a data set of any size. In the case of a very large data set, though, I wouldn’t display all of the data to the screen. Rather, I would just display the final results.
+
+\pagebreak
+
+\section{Code}
+\singlespacing
+
+\begin{lstlisting}
+
+/*-------------------------
+Author: Paul Watta
+Date: September 23, 2020
+Assignment #7
+--------------------------*/
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <math.h>
+#include <time.h>
+
+#define N_MAX 1000   //Maximum Array Size
+
+/* SETUP RAND SCORES  */
+
+void setupRandScores(int n, int x[], int min, int max)
+{
+	int i;
+
+	for (i = 0; i < n; i++)
+	{
+		x[i] = min + rand() % (max - min + 1);
+	}
+}
+
+/*  GET AVE  */
+
+float getAve(int n, int x[])
+{
+	int i;
+	float sum, ave;
+
+	sum = 0;
+	for (i = 0; i < n; i++)
+	{
+		sum += x[i];
+	}
+
+	ave = (float)sum / (float)n;
+	return(ave);
+
+}
+
+/* GET STD DEV  */
+
+float getStdDev(int n, int x[])
+{
+	int i;
+	float sum, ave, var, std_dev;
+
+	ave = getAve(n, x);
+
+	sum = 0;
+	for (i = 0; i < n; i++)
+	{
+		sum += (x[i] - ave) * (x[i] - ave);
+	}
+
+	var = (float)sum / (float)n;
+	std_dev = sqrt(var);
+
+	return(std_dev);
+}
+
+/*  PRINT ARRAY */
+
+void printArray(int n, int x[], char label[])
+{
+	int i;
+
+	printf("\n%s: ", label);
+	for (i = 0; i < n; i++)
+	{
+		printf("%d ", x[i]);
+	}
+}
+\end{lstlisting}
+
+\pagebreak
+\begin{lstlisting}
+/*  MAIN  */
+
+int main()
+{
+	srand(time(NULL));
+
+	int grades[N_MAX];
+
+	int numStudents = 10;
+
+	float average, stdDev;
+
+	setupRandScores(numStudents, grades, 50, 100);
+	average = getAve(numStudents, grades);
+	stdDev = getStdDev(numStudents, grades);
+
+	printArray(numStudents, grades,"Grades");
+
+	printf("\nNumber of Students: %d", numStudents);
+	printf("\n           Average: %.2f", average);
+	printf("\n.     Standard Dev: %.2f\n", stdDev);
+
+	system("PAUSE");
+
+	return 0;
+}
+
+\end{lstlisting}
+
+\end{document}
+
