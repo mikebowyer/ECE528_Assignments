@@ -3,6 +3,7 @@ import shutil  # to save it locally
 import os, math
 import matplotlib.pyplot as plt
 import cv2
+from PIL import Image
 
 
 def download_images_update_students(studentInfo, outputImgDir):
@@ -43,21 +44,25 @@ def download_images_update_students(studentInfo, outputImgDir):
 
 def plot_all_students(validStudents):
     numStudents = len(validStudents)
-    numCols = math.ceil(math.sqrt(numStudents))
-    numRows = numCols - 1
+    numCols = math.ceil(math.sqrt(numStudents)) + 1
+    numRows = numCols - 2
 
-    fig = plt.figure()
+    fig = plt.figure(figsize=(21, 15), dpi=80)
     plt.cla()
     plt.clf()
     i = 1
     for student in validStudents:
         # plt.subplot(numRowsCols, numRowsCols, i)
-        img = plt.imread(validStudents[i-1].imgPath)
+
+        # img = plt.imread(validStudents[i-1].imgPath)
+        img = Image.open(validStudents[i-1].imgPath)
+        resizedImg = img.resize((150, 150))
+
         ax = fig.add_subplot(numRows, numCols, i)
         ax.set_axis_off()
         ax.text(75, 170, str(student.firstname +" "+ student.lastname),
-                fontsize=6, ha='center')
-        ax.imshow(img)
+                fontsize=10, ha='center')
+        ax.imshow(resizedImg)
         i += 1
 
     fig.show()
