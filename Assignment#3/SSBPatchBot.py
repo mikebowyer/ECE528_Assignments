@@ -1,6 +1,8 @@
 import discord
 import argparse
 import asyncio
+from lib import ssb_patch_parser
+
 
 
 
@@ -14,6 +16,9 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     bot = discord.Client(intents=intents)
+
+    ssb_patch = ssb_patch_parser.SSB()
+    print("Yo")
 
 
     @bot.event

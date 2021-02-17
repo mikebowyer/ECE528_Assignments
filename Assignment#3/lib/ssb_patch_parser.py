@@ -11,11 +11,14 @@ class SSB():
         self.patch = {"title": None, "url": None, "desc": None, "image": None}
         self.color = 16744448
         self.thumbnail = "https://i.imgur.com/OViQbBo.png"
+        self.get_latest_patch_info()
 
-    def get_patch_info(self):
+    def get_latest_patch_info(self):
 
         # Gets source of Counter-strike's blog.
         driver = webdriver.Chrome()
+        op = webdriver.ChromeOptions()
+        driver = webdriver.Chrome(options=op)
         try:
             driver.get("https://www.smashbros.com/en_US/blog/index.html")
             assert "Super" in driver.title
@@ -27,9 +30,11 @@ class SSB():
             raise Exception("Couldn't connect to " + self.name + "'s website.")
 
         try:
-            for blog in blogItems:
 
+            for blog in blogItems:
+                self.patch["desc"] = blog.text
                 print("Blog Text: {}".format(blog.text))
+                break
         except:
             raise Exception("Couldn't get blog info")
         driver.close()
@@ -38,4 +43,4 @@ class SSB():
 
 if __name__ == '__main__':
     ssb = SSB()
-    ssb.get_patch_info()
+    ssb.get_latest_patch_info()
