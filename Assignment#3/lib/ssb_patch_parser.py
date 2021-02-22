@@ -1,8 +1,4 @@
-import urllib
-from urllib.request import Request, urlopen
-from bs4 import BeautifulSoup as soup
 from selenium import webdriver
-from selenium.webdriver.common.keys import Keys
 
 class SSB():
     def __init__(self):

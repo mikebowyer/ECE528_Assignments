@@ -2,6 +2,7 @@ import discord
 import argparse
 import asyncio
 from lib import ssb_patch_parser
+from lib import discord_utils
 
 
 
@@ -18,6 +19,8 @@ if __name__ == '__main__':
     bot = discord.Client(intents=intents)
 
     ssb_patch = ssb_patch_parser.SSB()
+
+    discord_utils.grabLastBotMessageInChannel()
     print("Yo")
 
 
