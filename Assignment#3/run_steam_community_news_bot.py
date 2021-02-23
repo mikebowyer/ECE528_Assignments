@@ -10,11 +10,16 @@ parser.add_argument('--jsonConfig', help='JSON config file which contains which 
 steamCommunityNewsBot = SteamCommunityNewsBot()
 @steamCommunityNewsBot.bot.event
 async def on_message(message):
-    # do something with message
-    print(message.content)
+    returnMsg = steamCommunityNewsBot.handleIncomingMessage(message)
+    if returnMsg != None:
+        await message.channel.send(returnMsg)
 
-    if message.content == 'hello bottymcbotface':
-        await message.channel.send('hello!')
+@steamCommunityNewsBot.bot.event
+async def on_ready():
+    print('Logged in as')
+    print(steamCommunityNewsBot.bot.user.name)
+    print(steamCommunityNewsBot.bot.user.id)
+    print('------')
 
 if __name__ == '__main__':
 
@@ -22,6 +27,7 @@ if __name__ == '__main__':
 
     while True:
         try:
+            steamCommunityNewsBot.updateConfig(args.jsonConfig)
             steamCommunityNewsBot.bot.loop.run_until_complete(steamCommunityNewsBot.bot.start(args.token))
         except KeyboardInterrupt:
             steamCommunityNewsBot.bot.loop.run_until_complete(steamCommunityNewsBot.bot.logout())
