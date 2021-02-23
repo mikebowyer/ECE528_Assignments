@@ -1,4 +1,5 @@
 import discord
+from discord.ext import commands
 from lib import ssb_patch_parser
 from lib import discord_utils
 
@@ -10,10 +11,7 @@ class GuildChannelSteamNews:
         self.steamsNewsURL = steamNewsURL
 
 
-class SteamCommunityNewsBotClient(discord.Client):
-    async def on_message(self, message):
-        # do something with message
-        print(message.content)
-
-        if message.content == 'hello bottymcbotface':
-            await message.channel.send('hello!')
+class SteamCommunityNewsBot:
+    def __init__(self):
+        self.jsonConfigPath = ""
+        self.bot = commands.Bot(command_prefix='!')
