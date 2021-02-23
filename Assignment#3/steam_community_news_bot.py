@@ -61,13 +61,24 @@ class SteamCommunityNewsBot:
 
     def addNewCommunityNews(self, message):
         returnMessage = 'Default error message'
-        channelID = message.channel.id
-        channelName = message.channel.name
+
         if len(message.content.split()) >= 2:
             url = message.content.split()[2]
-            #TODO: Check if it is a valid steam community link
-            returnMessage = "Adding new community to this channel. Expect news from the steam community at {} to be posted to this channel!".format(url)
+            # TODO: Check if it is a valid steam community link
+            newJsonEntry = {"channelName": message.channel.id,
+                            "channelId": message.channel.name,
+                            "url": url,
+                            "last_patch_title": ""
+                            }
+            self.jsonData['Communities'].append(newJsonEntry)
+            self.writeJsonData()
+            returnMessage = "Adding new community to this channel. Expect news from the steam community at {} to be posted to this channel!".format(
+                url)
         else:
             returnMessage = 'Invalid URL Provided, please provide valid steam community news URL. EG: https://steamcommunity.com/app/892970/'
 
         return returnMessage
+
+    def writeJsonData(self):
+        with open(self.jsonConfigPath, 'w') as configFile:
+            json.dump(self.jsonData, configFile)
