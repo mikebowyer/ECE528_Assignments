@@ -1,8 +1,7 @@
 import discord
 from discord.ext import commands
 import json
-from lib import ssb_patch_parser
-from lib import discord_utils
+from lib import steam_community_news_parser as newsParser
 
 
 class GuildChannelSteamNews:
@@ -36,6 +35,8 @@ class SteamCommunityNewsBot:
                 elif "latest" in message.content:
                     returnMessage = "grabbing latest content for this game"
                     url = self.getNewsURL(message.channel)
+                    latestAnnouncment = newsParser.getLatestAccouncement(url)
+                    returnMessage = latestAnnouncment["title"]
                 else:
                     returnMessage = self.getHelpMessage()
         return returnMessage
