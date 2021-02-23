@@ -1,12 +1,14 @@
 {
     "Communities": [
-        { "community_name":"Stardew Valley",
+        {
             "channel":"steam-community-news-bot-space",
-            "url":"https://steamcommunity.com/app/413150/"
+            "url":"https://steamcommunity.com/app/413150/",
+            "last_patch_title": ""
         },
-        { "community_name":"Valheim",
+        {
             "channel":" tbd",
-            "url":"https://steamcommunity.com/app/892970/"
+            "url":"https://steamcommunity.com/app/892970/",
+            "last_patch_title": ""
         }
     ]
 }

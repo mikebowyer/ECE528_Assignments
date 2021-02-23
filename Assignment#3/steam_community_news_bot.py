@@ -15,14 +15,14 @@ class GuildChannelSteamNews:
 class SteamCommunityNewsBot:
     def __init__(self):
         self.jsonConfigPath = None
-        self.jsonConfigData = None
+        self.jsonData = None
         self.bot = commands.Bot(command_prefix='!')
 
     def readConfig(self, jsonConfigPath):
         try:
             f = open(jsonConfigPath, )
             self.jsonConfigPath = jsonConfigPath
-            self.jsonConfigData = json.load(f)
+            self.jsonData = json.load(f)
             return True
         except:
             return False
@@ -35,6 +35,7 @@ class SteamCommunityNewsBot:
                     returnMessage = "Adding new steam community news to this channel"
                 elif "latest" in message.content:
                     returnMessage = "grabbing latest content for this game"
+                    url = self.getNewsURL(message.channel)
                 else:
                     returnMessage = self.getHelpMessage()
         return returnMessage
@@ -45,3 +46,14 @@ class SteamCommunityNewsBot:
             + '\tadd <steam community news URL> - Causes any new news posted on the steam community news page to sent to this channel\n'\
             + '\tlatest - Causes latest news on steam community to be sent to this channel'
         return helpMessage
+
+    def getNewsURL(self, channel):
+        returnURL = None
+        for community in self.jsonData["Communities"]:
+            if channel.name == community["channel"]:
+                print("match")
+                returnURL = community["url"]
+                break
+        return returnURL
+
+
