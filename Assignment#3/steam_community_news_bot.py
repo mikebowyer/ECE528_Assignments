@@ -32,6 +32,7 @@ class SteamCommunityNewsBot:
             if mention.id == self.bot.user.id:
                 if "add" in message.content:
                     returnMessage = "Adding new steam community news to this channel"
+                    returnMessage = self.addNewCommunityNews(message)
                 elif "latest" in message.content:
                     returnMessage = "grabbing latest content for this game"
                     url = self.getNewsURL(message.channel)
@@ -39,13 +40,14 @@ class SteamCommunityNewsBot:
                     returnMessage = latestAnnouncment["title"]
                 else:
                     returnMessage = self.getHelpMessage()
+
         return returnMessage
 
     def getHelpMessage(self):
         helpMessage = "Thanks for tagging Steam Community Bot! \n" \
-            + "There are two simple commands to use this bot: add & latest. \n" \
-            + '\tadd <steam community news URL> - Causes any new news posted on the steam community news page to sent to this channel\n'\
-            + '\tlatest - Causes latest news on steam community to be sent to this channel'
+                      + "There are two simple commands to use this bot: add & latest. \n" \
+                      + '\tadd <steam community news URL> - Causes any new news posted on the steam community news page to sent to this channel\n' \
+                      + '\tlatest - Causes latest news on steam community to be sent to this channel'
         return helpMessage
 
     def getNewsURL(self, channel):
@@ -57,4 +59,15 @@ class SteamCommunityNewsBot:
                 break
         return returnURL
 
+    def addNewCommunityNews(self, message):
+        returnMessage = 'Default error message'
+        channelID = message.channel.id
+        channelName = message.channel.name
+        if len(message.content.split()) >= 2:
+            url = message.content.split()[2]
+            #TODO: Check if it is a valid steam community link
+            returnMessage = "Adding new community to this channel. Expect news from the steam community at {} to be posted to this channel!".format(url)
+        else:
+            returnMessage = 'Invalid URL Provided, please provide valid steam community news URL. EG: https://steamcommunity.com/app/892970/'
 
+        return returnMessage
