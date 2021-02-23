@@ -1,34 +1,12 @@
 {
-    "games": {
-        "League of Legends": {
-            "channels": [
-                "league-of-legends"
-            ]
+    "Communities": [
+        { "community_name":"Stardew Valley",
+            "channel":"steam-community-news-bot-space",
+            "url":"https://steamcommunity.com/app/413150/"
         },
-        "Fortnite": {
-            "channels": [
-                "fortnite"
-            ]
-        },
-        "CSGO": {
-            "channels": [
-                "csgo"
-            ]
-        },
-        "Overwatch": {
-            "channels": [
-                "overwatch"
-            ]
-        },
-        "Rust": {
-            "channels": [
-                "rust"
-            ]
-        },
-        "Path of Exile": {
-            "channels": [
-                "poe"
-            ]
+        { "community_name":"Valheim",
+            "channel":" tbd",
+            "url":"https://steamcommunity.com/app/892970/"
         }
-    }
+    ]
 }

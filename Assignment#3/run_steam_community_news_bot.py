@@ -27,8 +27,11 @@ if __name__ == '__main__':
 
     while True:
         try:
-            steamCommunityNewsBot.updateConfig(args.jsonConfig)
-            steamCommunityNewsBot.bot.loop.run_until_complete(steamCommunityNewsBot.bot.start(args.token))
+            if steamCommunityNewsBot.readConfig(args.jsonConfig):
+                steamCommunityNewsBot.bot.loop.run_until_complete(steamCommunityNewsBot.bot.start(args.token))
+            else:
+                print("Error reading config file, exiting.")
+                break
         except KeyboardInterrupt:
             steamCommunityNewsBot.bot.loop.run_until_complete(steamCommunityNewsBot.bot.logout())
         finally:

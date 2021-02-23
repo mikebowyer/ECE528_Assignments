@@ -18,14 +18,30 @@ class SteamCommunityNewsBot:
         self.jsonConfigData = None
         self.bot = commands.Bot(command_prefix='!')
 
-    def updateConfig(self, jsonConfigPath):
-        self.jsonConfigPath = jsonConfigPath
-        f = open(jsonConfigPath, )
-        self.jsonConfigData = json.load(f)
+    def readConfig(self, jsonConfigPath):
+        try:
+            f = open(jsonConfigPath, )
+            self.jsonConfigPath = jsonConfigPath
+            self.jsonConfigData = json.load(f)
+            return True
+        except:
+            return False
 
     def handleIncomingMessage(self, message):
-        returnMessage= None
+        returnMessage = None
         for mention in message.mentions:
             if mention.id == self.bot.user.id:
-                returnMessage = "Don't you @ me boy!"
+                if "add" in message.content:
+                    returnMessage = "Adding new steam community news to this channel"
+                elif "latest" in message.content:
+                    returnMessage = "grabbing latest content for this game"
+                else:
+                    returnMessage = self.getHelpMessage()
         return returnMessage
+
+    def getHelpMessage(self):
+        helpMessage = "Thanks for tagging Steam Community Bot! \n" \
+            + "There are two simple commands to use this bot: add & latest. \n" \
+            + '\tadd <steam community news URL> - Causes any new news posted on the steam community news page to sent to this channel\n'\
+            + '\tlatest - Causes latest news on steam community to be sent to this channel'
+        return helpMessage
