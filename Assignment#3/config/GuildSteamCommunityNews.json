@@ -1,8 +1,8 @@
 {
   "Communities": [
     {
-      "channelName": 811035158106210314 ,
-      "channelId": "steam-community-news-bot-space" ,
+      "channelId": 811035158106210314 ,
+      "channelName": "steam-community-news-bot-space" ,
       "url": "https://steamcommunity.com/app/892970/" ,
       "last_patch_title": ""
     }

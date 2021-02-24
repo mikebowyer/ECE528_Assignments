@@ -69,8 +69,8 @@ class SteamCommunityNewsBot:
         if len(message.content.split()) >= 2:
             url = message.content.split()[2]
             # TODO: Check if it is a valid steam community link
-            newJsonEntry = {"channelName": message.channel.id,
-                            "channelId": message.channel.name,
+            newJsonEntry = {"channelId": message.channel.id,
+                            "channelName": message.channel.name,
                             "url": url,
                             "last_patch_title": ""
                             }
