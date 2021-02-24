@@ -1,4 +1,5 @@
 import argparse
+import discord
 import json
 from steam_community_news_bot import SteamCommunityNewsBot
 
@@ -10,8 +11,10 @@ parser.add_argument('--jsonConfig', help='JSON config file which contains which 
 steamCommunityNewsBot = SteamCommunityNewsBot()
 @steamCommunityNewsBot.bot.event
 async def on_message(message):
-    returnMsg = steamCommunityNewsBot.handleIncomingMessage(message)
-    if returnMsg != None:
+    embedVar, returnMsg = steamCommunityNewsBot.handleIncomingMessage(message)
+    if embedVar != None:
+        await message.channel.send(embed=embedVar)
+    elif returnMsg != None:
         await message.channel.send(returnMsg)
 
 @steamCommunityNewsBot.bot.event

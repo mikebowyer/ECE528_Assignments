@@ -28,6 +28,7 @@ class SteamCommunityNewsBot:
 
     def handleIncomingMessage(self, message):
         returnMessage = None
+        embeddedMessageForAnnouncment = None
         for mention in message.mentions:
             if mention.id == self.bot.user.id:
                 if "add" in message.content:
@@ -36,7 +37,7 @@ class SteamCommunityNewsBot:
                     url = self.getNewsURLForThisChannel(message.channel)
                     if url != None:
                         latestAnnouncment = newsParser.getLatestAccouncement(url)
-                        returnMessage = latestAnnouncment["title"]
+                        embeddedMessageForAnnouncment= self.createEmbedObjectForAnnouncment(latestAnnouncment)
                     else:
                         returnMessage = "This channel is not associated with a Steam Community News URL! Add the " \
                                         + "community URL using the add option.\n" \
@@ -45,7 +46,7 @@ class SteamCommunityNewsBot:
                 else:
                     returnMessage = self.getHelpMessage()
 
-        return returnMessage
+        return embeddedMessageForAnnouncment, returnMessage
 
     def getHelpMessage(self):
         helpMessage = "Thanks for tagging Steam Community Bot! \n" \
@@ -86,3 +87,12 @@ class SteamCommunityNewsBot:
     def writeJsonData(self):
         with open(self.jsonConfigPath, 'w') as configFile:
             json.dump(self.jsonData, configFile)
+
+    def createEmbedObjectForAnnouncment(self, announcment):
+        embedObj = discord.Embed(title=announcment['title'], description=announcment['info'], url=announcment['url'],
+                                                      color=0x00ff00)
+        if announcment['img_url'] != None:
+            embedObj.set_image(url=announcment['img_url'])
+        # embedObj.add_field(name="Field1", value="hi", inline=False)
+        # embedObj.add_field(name="Field2", value="hi2", inline=False)
+        return embedObj
