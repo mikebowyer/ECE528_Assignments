@@ -31,13 +31,17 @@ class SteamCommunityNewsBot:
         for mention in message.mentions:
             if mention.id == self.bot.user.id:
                 if "add" in message.content:
-                    returnMessage = "Adding new steam community news to this channel"
                     returnMessage = self.addNewCommunityNews(message)
                 elif "latest" in message.content:
-                    returnMessage = "grabbing latest content for this game"
-                    url = self.getNewsURL(message.channel)
-                    latestAnnouncment = newsParser.getLatestAccouncement(url)
-                    returnMessage = latestAnnouncment["title"]
+                    url = self.getNewsURLForThisChannel(message.channel)
+                    if url != None:
+                        latestAnnouncment = newsParser.getLatestAccouncement(url)
+                        returnMessage = latestAnnouncment["title"]
+                    else:
+                        returnMessage = "This channel is not associated with a Steam Community News URL! Add the " \
+                                        + "community URL using the add option.\n" \
+                                        + '\tadd <steam community news URL> - Causes any new news posted on the steam community news ' \
+                                        + 'page to sent to this channel\n '
                 else:
                     returnMessage = self.getHelpMessage()
 
@@ -50,10 +54,10 @@ class SteamCommunityNewsBot:
                       + '\tlatest - Causes latest news on steam community to be sent to this channel'
         return helpMessage
 
-    def getNewsURL(self, channel):
+    def getNewsURLForThisChannel(self, channel):
         returnURL = None
         for community in self.jsonData["Communities"]:
-            if channel.name == community["channel"]:
+            if channel.name == community["channelName"]:
                 print("match")
                 returnURL = community["url"]
                 break

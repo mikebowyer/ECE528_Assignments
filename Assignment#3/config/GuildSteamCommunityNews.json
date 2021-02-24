@@ -1,1 +1,10 @@
-{"Communities": [{"channel": "steam-community-news-bot-space", "url": "https://steamcommunity.com/app/892970/", "last_patch_title": ""}, {"channel": " tbd", "url": "https://steamcommunity.com/app/413150/", "last_patch_title": ""}, "hi", {"channelName": 811035158106210314, "channelId": "steam-community-news-bot-space", "url": "https://steamcommunity.com/app/892970/", "last_patch_title": ""}]}
+{
+  "Communities": [
+    {
+      "channelName": 811035158106210314 ,
+      "channelId": "steam-community-news-bot-space" ,
+      "url": "https://steamcommunity.com/app/892970/" ,
+      "last_patch_title": ""
+    }
+  ]
+}
