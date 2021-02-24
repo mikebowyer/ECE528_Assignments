@@ -46,6 +46,7 @@ class SteamCommunityNewsBot:
                                         + 'page to sent to this channel\n '
                 else:
                     returnMessage = self.getHelpMessage()
+                break
 
         return embeddedMessageForAnnouncment, returnMessage
 
