@@ -1,10 +1,1 @@
-{
-  "Communities": [
-    {
-      "channelId": 811035158106210314 ,
-      "channelName": "steam-community-news-bot-space" ,
-      "url": "https://steamcommunity.com/app/892970/" ,
-      "last_patch_title": ""
-    }
-  ]
-}
+{"Communities": [{"channelId": 811035158106210314, "channelName": "steam-community-news-bot-space", "url": "https://steamcommunity.com/app/892970/", "lastAnnouncementTitle": "Three Million Vikings!"}, {"channelId": 807430946227355700, "channelName": "private-spam", "url": "https://steamcommunity.com/app/413150/allnews/", "lastAnnouncementTitle": "1.5.4 Patch Out Now"}]}

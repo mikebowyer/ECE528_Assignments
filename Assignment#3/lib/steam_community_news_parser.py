@@ -22,16 +22,11 @@ def getLatestAccouncement(url):
         latestAccouncement["date"] = announcmentCards[0].findAll("div", class_="apphub_CardContentNewsDate")[0].text
         latestAccouncement["img_url"] = announcmentCards[0].findAll("img")[0].attrs["src"]
         latestAccouncement["url"] = announcmentCards[0].attrs["data-modal-content-url"]
-
-        # contents = announcmentCards[0].findAll("div", class_="apphub_CardTextContent")[0].contents
-        # resultStr = ""
-        # for element in contents:
-        #     elemStr = str(element)
-        #     if elemStr == '<br/>':
-        #         elemStr = '\n'
-        #     resultStr = resultStr + elemStr
-
         latestAccouncement["info"] = announcmentCards[0].findAll("div", class_="apphub_CardTextContent")[0].get_text(separator="\n")
+        #trim message to only limited characters because discord limits them
+        if len(latestAccouncement["info"]) > 2047:
+            trimmedStr = latestAccouncement["info"][:2044] + "..."
+            latestAccouncement["info"] = trimmedStr
     except:
         raise Exception("Error retrieving annoucnment information title.")
 

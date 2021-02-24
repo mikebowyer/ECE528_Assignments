@@ -34,10 +34,11 @@ class SteamCommunityNewsBot:
                 if "add" in message.content:
                     returnMessage = self.addNewCommunityNews(message)
                 elif "latest" in message.content:
-                    url = self.getNewsURLForThisChannel(message.channel)
+                    url = self.getNewsURLForThisChannel(message.channel.name)
                     if url != None:
                         latestAnnouncment = newsParser.getLatestAccouncement(url)
-                        embeddedMessageForAnnouncment= self.createEmbedObjectForAnnouncment(latestAnnouncment)
+                        embeddedMessageForAnnouncment = self.createEmbedObjectForAnnouncment(latestAnnouncment)
+                        self.setLatestAccouncementTitle(message.channel, latestAnnouncment['title'])
                     else:
                         returnMessage = "This channel is not associated with a Steam Community News URL! Add the " \
                                         + "community URL using the add option.\n" \
@@ -55,14 +56,20 @@ class SteamCommunityNewsBot:
                       + '\tlatest - Causes latest news on steam community to be sent to this channel'
         return helpMessage
 
-    def getNewsURLForThisChannel(self, channel):
+    def getNewsURLForThisChannel(self, channelName):
         returnURL = None
         for community in self.jsonData["Communities"]:
-            if channel.name == community["channelName"]:
-                print("match")
+            if channelName == community["channelName"]:
                 returnURL = community["url"]
                 break
         return returnURL
+
+    def setLatestAccouncementTitle(self, channel, accountmentTitle):
+        for community in self.jsonData["Communities"]:
+            if channel == community["channelName"]:
+                community['lastAnnouncementTitle'] = accountmentTitle
+                break
+        self.writeJsonData()
 
     def addNewCommunityNews(self, message):
         returnMessage = 'Default error message'
@@ -73,7 +80,7 @@ class SteamCommunityNewsBot:
             newJsonEntry = {"channelId": message.channel.id,
                             "channelName": message.channel.name,
                             "url": url,
-                            "last_patch_title": ""
+                            "lastAnnouncementTitle": ""
                             }
             self.jsonData['Communities'].append(newJsonEntry)
             self.writeJsonData()
@@ -90,9 +97,22 @@ class SteamCommunityNewsBot:
 
     def createEmbedObjectForAnnouncment(self, announcment):
         embedObj = discord.Embed(title=announcment['title'], description=announcment['info'], url=announcment['url'],
-                                                      color=0x00ff00)
+                                 color=0x00ff00)
         if announcment['img_url'] != None:
             embedObj.set_image(url=announcment['img_url'])
         # embedObj.add_field(name="Field1", value="hi", inline=False)
         # embedObj.add_field(name="Field2", value="hi2", inline=False)
         return embedObj
+
+    def getNewAnnouncementChannelPairs(self):
+        newAnnoucementChannelPairs = []
+        for community in self.jsonData["Communities"]:
+            url = self.getNewsURLForThisChannel(community["channelName"])
+            latestAnnouncment = newsParser.getLatestAccouncement(url)
+            #If new announcment
+            if latestAnnouncment['title'] != community['lastAnnouncementTitle']:
+                embeddedMessageForAnnouncment = self.createEmbedObjectForAnnouncment(latestAnnouncment)
+                self.setLatestAccouncementTitle(community["channelName"], latestAnnouncment['title'])
+                announceChannelPair = {"embedMsg": embeddedMessageForAnnouncment, "channelId": community["channelId"]}
+                newAnnoucementChannelPairs.append(announceChannelPair)
+        return newAnnoucementChannelPairs
