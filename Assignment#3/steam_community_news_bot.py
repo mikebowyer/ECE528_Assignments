@@ -27,31 +27,37 @@ class SteamCommunityNewsBot:
             return False
 
     def handleIncomingMessage(self, message):
-        returnMessages = None
-        embeddedMessageForAnnouncment = None
+        returnMessage = None #Stores normal text responses to send
+        embedmsg = None #Stores embedded annoucnment information
         for mention in message.mentions:
             if mention.id == self.bot.user.id:
+                print("INFO: New message in channel {} tagged this bot, responding.".format(message.channel.name))
                 if "add" in message.content:
-                    returnMessage, addedSucessfully = self.addNewCommunityNews(message)
-                    if addedSucessfully:
+                    returnMessage, communityName = self.addNewCommunityNews(message)
+                    if communityName != None:
                         print("Need to find newest patch and share it")
+                        embedmsg = self.getLatestAnnouncmentForCommunity(communityName)
 
                 elif "latest" in message.content:
                     url = self.getNewsURLForThisChannel(message.channel.name)
                     if url != None:
                         latestAnnouncment = newsParser.getLatestAccouncement(url)
-                        embeddedMessageForAnnouncment = self.createEmbedObjectForAnnouncment(latestAnnouncment)
+                        embedmsg = self.createEmbedObjectForAnnouncment(latestAnnouncment)
                         self.setLatestAccouncementTitle(message.channel, latestAnnouncment['title'])
                     else:
                         returnMessage = "This channel is not associated with a Steam Community News URL! Add the " \
                                         + "community URL using the add option.\n" \
                                         + '\tadd <steam community news URL> - Causes any new news posted on the steam community news ' \
                                         + 'page to sent to this channel\n '
+                elif "list" in message.content:
+                    print("List")
+                elif "remove" in message.content:
+                    print("remove")
                 else:
                     returnMessage = self.getHelpMessage()
                 break
 
-        return embeddedMessageForAnnouncment, returnMessage
+        return embedmsg, returnMessage
 
     def getHelpMessage(self):
         helpMessage = "Thanks for tagging Steam Community Bot! \n" \
@@ -77,14 +83,14 @@ class SteamCommunityNewsBot:
 
     def addNewCommunityNews(self, message):
         returnMessage = 'Default error message'
-        addedSucessfully = False
+        communityName = None
         if len(message.content.split()) >= 2:
             url = message.content.split()[2]
-            communityName = newsParser.getCommunityName(url)
-            if communityName != None:
+            retrievedCommunityName = newsParser.getCommunityName(url)
+            if retrievedCommunityName != None:
                 latestAnnoucnment = newsParser.getLatestAccouncement(url)
                 newJsonEntry = {
-                                "communityName": communityName,
+                                "communityName": retrievedCommunityName,
                                 "channelId": message.channel.id,
                                 "channelName": message.channel.name,
                                 "url": url,
@@ -94,13 +100,13 @@ class SteamCommunityNewsBot:
                 self.writeJsonData()
                 returnMessage = "Adding new community to this channel. Expect news from the steam community at {} to be posted to this channel!".format(
                     url)
-                addedSucessfully=True
+                communityName=retrievedCommunityName
             else:
                 returnMessage = 'Invalid URL Provided, please provide valid steam community news URL. EG: https://steamcommunity.com/app/892970/'
         else:
             returnMessage = 'Invalid URL Provided, please provide valid steam community news URL. EG: https://steamcommunity.com/app/892970/'
 
-        return returnMessage, addedSucessfully
+        return returnMessage, communityName
 
     def writeJsonData(self):
         with open(self.jsonConfigPath, 'w') as configFile:
@@ -127,3 +133,13 @@ class SteamCommunityNewsBot:
                 announceChannelPair = {"embedMsg": embeddedMessageForAnnouncment, "channelId": community["channelId"]}
                 newAnnoucementChannelPairs.append(announceChannelPair)
         return newAnnoucementChannelPairs
+
+    def getLatestAnnouncmentForCommunity(self, communityName):
+        embeddedMessageForAnnouncment = None
+        for community in self.jsonData['Communities']:
+            if community['communityName'] == communityName:
+                latestAnnouncment = newsParser.getLatestAccouncement(community['url'])
+                embeddedMessageForAnnouncment = self.createEmbedObjectForAnnouncment(latestAnnouncment)
+                # self.setLatestAccouncementTitle(message.channel, latestAnnouncment['title'])
+
+        return embeddedMessageForAnnouncment

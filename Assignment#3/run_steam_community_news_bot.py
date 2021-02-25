@@ -11,12 +11,11 @@ steamCommunityNewsBot = SteamCommunityNewsBot()
 @steamCommunityNewsBot.bot.event
 async def on_message(message):
     embedVar, returnMsg = steamCommunityNewsBot.handleIncomingMessage(message)
-    if embedVar != None:
-        print("INFO: New message in channel {} tagged this bot, responding.".format(message.channel.name))
-        await message.channel.send(embed=embedVar)
-    elif returnMsg != None:
-        print("INFO: New message in channel {} tagged this bot, responding.".format(message.channel.name))
+
+    if returnMsg != None:
         await message.channel.send(returnMsg)
+    if embedVar != None:
+        await message.channel.send(embed=embedVar)
 
 
 @steamCommunityNewsBot.bot.event
