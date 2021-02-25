@@ -54,8 +54,9 @@ class SteamCommunityNewsBot:
                 elif "remove" in message.content:
                     communityNameSplit= message.content.split()[2:]#strip out community name from message: @SteamCommunityBot Remove <community name>
                     communityName = " ".join(communityNameSplit) #make a single string single spaced
-                    self.removeCommunity(communityName)
-                    print("remove")
+                    removalSuccess = self.removeCommunity(communityName)
+                    if removalSuccess:
+                        returnmsg = "Succesfully removed announcments for {} from this channel".format(communityName)
                 else:
                     returnmsg = self.getHelpMessage()
                 break
@@ -169,6 +170,11 @@ class SteamCommunityNewsBot:
         return returnMsg
 
     def removeCommunity(self, communityName):
+        removalSuccess=False
         for community in self.jsonData['Communities']:
-            if community['communityName'] == communityName:
-                print("match")
+            if communityName in community['communityName']:
+                self.jsonData['Communities'].remove(community)
+                self.writeJsonData()
+                removalSuccess=True
+
+        return removalSuccess
