@@ -27,6 +27,7 @@ class SteamCommunityNewsBot:
             return False
 
     def handleIncomingMessage(self, message):
+        returnMsgList = []
         returnmsg = None #Stores normal text responses to send
         embedmsg = None #Stores embedded annoucnment information
         for mention in message.mentions:
@@ -34,10 +35,13 @@ class SteamCommunityNewsBot:
                 print("INFO: New message in channel {} tagged this bot, responding.".format(message.channel.name))
                 if "add" in message.content:
                     returnmsg, communityName = self.addNewCommunityNews(message)
+                    addedSuccessFailMsg = {'embed': False, 'contents': returnmsg}
                     if communityName != None:
                         print("Need to find newest patch and share it")
                         embedmsg = self.getLatestAnnouncmentForCommunity(communityName)
-
+                        latestAnnoucnmentMsg = {'embed': True, 'contents': embedmsg}
+                    returnMsgList.append(addedSuccessFailMsg)
+                    returnMsgList.append(latestAnnoucnmentMsg)
                 elif "latest" in message.content:
                     communityNameSplit = message.content.split()[
                                          2:]  # strip out community name from message: @SteamCommunityBot Remove <community name>
@@ -65,7 +69,7 @@ class SteamCommunityNewsBot:
                     returnmsg = self.getHelpMessage()
                 break
 
-        return embedmsg, returnmsg
+        return returnMsgList
 
     def getHelpMessage(self):
         helpMessage = "Thanks for tagging Steam Community Bot! \n" \

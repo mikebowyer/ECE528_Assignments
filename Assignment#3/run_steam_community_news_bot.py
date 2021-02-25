@@ -10,12 +10,14 @@ steamCommunityNewsBot = SteamCommunityNewsBot()
 
 @steamCommunityNewsBot.bot.event
 async def on_message(message):
-    embedVar, returnMsg = steamCommunityNewsBot.handleIncomingMessage(message)
+    returnMsgs = steamCommunityNewsBot.handleIncomingMessage(message)
 
-    if returnMsg != None:
-        await message.channel.send(returnMsg)
-    if embedVar != None:
-        await message.channel.send(embed=embedVar)
+    for msg in returnMsgs:
+        if msg["embed"]:
+            await message.channel.send(embed=msg['contents'])
+        else:
+            await message.channel.send(msg['contents'])
+
 
 
 @steamCommunityNewsBot.bot.event

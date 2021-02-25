@@ -1,11 +1,1 @@
-{
-  "Communities": [
-    {
-      "communityName": "Steam Community :: Valheim" ,
-      "channelId": 811035158106210314 ,
-      "channelName": "steam-community-news-bot-space" ,
-      "url": "https://steamcommunity.com/app/892970/" ,
-      "lastAnnouncementTitle": "Four Million Vikings!"
-    }
-  ]
-}
+{"Communities": [{"communityName": "Steam Community :: Valheim", "channelId": 811035158106210314, "channelName": "steam-community-news-bot-space", "url": "https://steamcommunity.com/app/892970/", "lastAnnouncementTitle": "Four Million Vikings!"}, {"communityName": "Steam Community :: Stardew Valley", "channelId": 811035158106210314, "channelName": "steam-community-news-bot-space", "url": "https://steamcommunity.com/app/413150/", "lastAnnouncementTitle": "1.5.4 Patch Out Now"}, {"communityName": "Steam Community :: Stardew Valley", "channelId": 811035158106210314, "channelName": "steam-community-news-bot-space", "url": "https://steamcommunity.com/app/413150/", "lastAnnouncementTitle": "1.5.4 Patch Out Now"}, {"communityName": "Steam Community :: Stardew Valley", "channelId": 811035158106210314, "channelName": "steam-community-news-bot-space", "url": "https://steamcommunity.com/app/413150/", "lastAnnouncementTitle": "1.5.4 Patch Out Now"}]}
