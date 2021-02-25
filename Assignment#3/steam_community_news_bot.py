@@ -39,14 +39,18 @@ class SteamCommunityNewsBot:
                         embedmsg = self.getLatestAnnouncmentForCommunity(communityName)
 
                 elif "latest" in message.content:
+                    communityNameSplit = message.content.split()[
+                                         2:]  # strip out community name from message: @SteamCommunityBot Remove <community name>
+                    communityName = " ".join(communityNameSplit)  # make a single string single spaced
 
-                    url = self.getNewsURLForThisChannel(message.channel.name)
-                    if url != None:
-                        latestAnnouncment = newsParser.getLatestAccouncement(url)
-                        embedmsg = self.createEmbedObjectForAnnouncment(latestAnnouncment)
-                        self.setLatestAccouncementTitle(message.channel, latestAnnouncment['title'])
+                    if "all" in communityName:
+                        #get all updates
+                        print("All")
                     else:
-                        returnmsg = self.getNoAssociatedCommunitiesErrorMsg()
+
+                        embedmsg = self.getLatestAnnouncmentForCommunity(communityName)
+                        if embedmsg == None:
+                            returnmsg = "No steam community of name {} is associated with this channel! Cannot get latest announcement.".format(communityName)
                 elif "list" in message.content:
                     returnmsg=self.getAllCommunityNameURLsMsg(message.channel)
                     print("List")
@@ -78,9 +82,9 @@ class SteamCommunityNewsBot:
                 break
         return returnURL
 
-    def setLatestAccouncementTitle(self, channel, accountmentTitle):
+    def setLatestAccouncementTitle(self, communityName, accountmentTitle):
         for community in self.jsonData["Communities"]:
-            if channel == community["channelName"]:
+            if communityName == community["communityName"]:
                 community['lastAnnouncementTitle'] = accountmentTitle
                 break
         self.writeJsonData()
@@ -132,7 +136,7 @@ class SteamCommunityNewsBot:
             #If new announcment
             if latestAnnouncment['title'] != community['lastAnnouncementTitle']:
                 embeddedMessageForAnnouncment = self.createEmbedObjectForAnnouncment(latestAnnouncment)
-                self.setLatestAccouncementTitle(community["channelName"], latestAnnouncment['title'])
+                self.setLatestAccouncementTitle(community["communityName"], latestAnnouncment['title'])
                 announceChannelPair = {"embedMsg": embeddedMessageForAnnouncment, "channelId": community["channelId"]}
                 newAnnoucementChannelPairs.append(announceChannelPair)
         return newAnnoucementChannelPairs
@@ -143,7 +147,7 @@ class SteamCommunityNewsBot:
             if community['communityName'] == communityName:
                 latestAnnouncment = newsParser.getLatestAccouncement(community['url'])
                 embeddedMessageForAnnouncment = self.createEmbedObjectForAnnouncment(latestAnnouncment)
-                # self.setLatestAccouncementTitle(message.channel, latestAnnouncment['title'])
+                self.setLatestAccouncementTitle(community['communityName'], latestAnnouncment['title'])
 
         return embeddedMessageForAnnouncment
 
