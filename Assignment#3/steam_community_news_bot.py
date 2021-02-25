@@ -52,6 +52,9 @@ class SteamCommunityNewsBot:
                     print("List")
 
                 elif "remove" in message.content:
+                    communityNameSplit= message.content.split()[2:]#strip out community name from message: @SteamCommunityBot Remove <community name>
+                    communityName = " ".join(communityNameSplit) #make a single string single spaced
+                    self.removeCommunity(communityName)
                     print("remove")
                 else:
                     returnmsg = self.getHelpMessage()
@@ -151,7 +154,7 @@ class SteamCommunityNewsBot:
             if community['channelId'] == channel.id:
                 newStr = "\t{} - {}\n".format(community['communityName'], community['url'])
                 returnMsg= returnMsg + newStr
-                community_found = False
+                community_found = True
 
         if not community_found:
             returnMsg=self.getNoAssociatedCommunitiesErrorMsg()
@@ -164,3 +167,8 @@ class SteamCommunityNewsBot:
         + '\tadd <steam community news URL> - Causes any new news posted on the steam community news ' \
         + 'page to sent to this channel\n '
         return returnMsg
+
+    def removeCommunity(self, communityName):
+        for community in self.jsonData['Communities']:
+            if community['communityName'] == communityName:
+                print("match")
