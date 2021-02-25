@@ -75,16 +75,21 @@ class SteamCommunityNewsBot:
                                           communityName)}
                         returnMsgList.append(failMsg)
                 else:
-                    returnmsg = self.getHelpMessage()
+                    helpMsg = {'embed': False,
+                                  'contents': self.getHelpMessage()}
+                    returnMsgList.append(helpMsg)
                 break
 
         return returnMsgList
 
     def getHelpMessage(self):
         helpMessage = "Thanks for tagging Steam Community Bot! \n" \
-                      + "There are two simple commands to use this bot: add & latest. \n" \
+                      + "There are a few simple commands to use this bot:\n" \
                       + '\tadd <steam community news URL> - Causes any new news posted on the steam community news page to sent to this channel\n' \
-                      + '\tlatest - Causes latest news on steam community to be sent to this channel'
+                      + '\tlist - Shows all steam communities associated with this channel.\n' \
+                      + '\tlatest <steam_community_name> - Causes latest news on the specified steam community to be sent to this channel.\n' \
+                      + '\tlatest all - Causes latest news on all steam communities associated with this channel to be sent to this channel.\n' \
+                      + '\tremove <steam community news URL> - Removes the specified steam community from this channel. \n'
         return helpMessage
 
     def getNewsURLForThisChannel(self, channelName):
