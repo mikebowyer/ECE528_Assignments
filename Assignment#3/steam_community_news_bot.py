@@ -128,8 +128,7 @@ class SteamCommunityNewsBot:
     def getNewAnnouncementChannelPairs(self):
         newAnnoucementChannelPairs = []
         for community in self.jsonData["Communities"]:
-            url = self.getNewsURLForThisChannel(community["channelName"])
-            latestAnnouncment = newsParser.getLatestAccouncement(url)
+            latestAnnouncment = newsParser.getLatestAccouncement(community['url'])
             #If new announcment
             if latestAnnouncment['title'] != community['lastAnnouncementTitle']:
                 embeddedMessageForAnnouncment = self.createEmbedObjectForAnnouncment(latestAnnouncment)
