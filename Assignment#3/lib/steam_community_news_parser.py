@@ -17,17 +17,32 @@ def getLatestAccouncement(url):
 
     # get latest anncouncment card information
     try:
+
         latestAccouncement["title"] = \
-        announcmentCards[0].findAll("div", class_="apphub_CardContentNewsTitle")[0].contents[0]
+            announcmentCards[0].findAll("div", class_="apphub_CardContentNewsTitle")[0].contents[0]
         latestAccouncement["date"] = announcmentCards[0].findAll("div", class_="apphub_CardContentNewsDate")[0].text
         latestAccouncement["img_url"] = announcmentCards[0].findAll("img")[0].attrs["src"]
         latestAccouncement["url"] = announcmentCards[0].attrs["data-modal-content-url"]
-        latestAccouncement["info"] = announcmentCards[0].findAll("div", class_="apphub_CardTextContent")[0].get_text(separator="\n")
-        #trim message to only limited characters because discord limits them
+        latestAccouncement["info"] = announcmentCards[0].findAll("div", class_="apphub_CardTextContent")[0].get_text(
+            separator="\n")
+        # trim message to only limited characters because discord limits them
         if len(latestAccouncement["info"]) > 2047:
             trimmedStr = latestAccouncement["info"][:2044] + "..."
             latestAccouncement["info"] = trimmedStr
     except:
-        raise Exception("Error retrieving annoucnment information title.")
+        raise Exception("Error retrieving announcement information title.")
 
     return latestAccouncement
+
+
+def getCommunityName(url):
+    communityname = None
+    try:
+        request = Request(url, headers={'User-Agent': 'Mozilla/5.0'})
+        source = urlopen(request).read()
+        bsoup = soup(source, "html.parser")
+        communityname = bsoup.findAll('title')[0].text
+    except:
+        raise Exception("Error retrieving community name!")
+
+    return communityname

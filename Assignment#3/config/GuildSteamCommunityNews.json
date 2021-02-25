@@ -1,1 +1,32 @@
-{"Communities": [{"channelId": 811035158106210314, "channelName": "steam-community-news-bot-space", "url": "https://steamcommunity.com/app/892970/", "lastAnnouncementTitle": "Three Million Vikings!"}, {"channelId": 807430946227355700, "channelName": "private-spam", "url": "https://steamcommunity.com/app/413150/allnews/", "lastAnnouncementTitle": "1.5.4 Patch Out Now"}, {"channelId": 667125426073894912, "channelName": "bot-spam-admin", "url": "https://steamcommunity.com/app/1086940", "lastAnnouncementTitle": "PANEL FROM HELL 2"}]}
+{
+  "Communities": [
+    {
+      "communityName": "" ,
+      "channelId": 811035158106210314 ,
+      "channelName": "steam-community-news-bot-space" ,
+      "url": "https://steamcommunity.com/app/892970/" ,
+      "lastAnnouncementTitle": "Four Million Vikings!"
+    } ,
+    {
+      "communityName": "" ,
+      "channelId": 807430946227355700 ,
+      "channelName": "private-spam" ,
+      "url": "https://steamcommunity.com/app/413150/allnews/" ,
+      "lastAnnouncementTitle": "1.5.4 Patch Out Now"
+    } ,
+    {
+      "communityName": "" ,
+      "channelId": 667125426073894912 ,
+      "channelName": "bot-spam-admin" ,
+      "url": "https://steamcommunity.com/app/1086940" ,
+      "lastAnnouncementTitle": "PANEL FROM HELL 2"
+    } ,
+    {
+      "communityName": "Steam Community :: Valheim" ,
+      "channelId": 811035158106210314 ,
+      "channelName": "steam-community-news-bot-space" ,
+      "url": "https://steamcommunity.com/app/892970/" ,
+      "lastAnnouncementTitle": "Four Million Vikings!"
+    }
+  ]
+}

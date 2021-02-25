@@ -27,12 +27,15 @@ class SteamCommunityNewsBot:
             return False
 
     def handleIncomingMessage(self, message):
-        returnMessage = None
+        returnMessages = None
         embeddedMessageForAnnouncment = None
         for mention in message.mentions:
             if mention.id == self.bot.user.id:
                 if "add" in message.content:
-                    returnMessage = self.addNewCommunityNews(message)
+                    returnMessage, addedSucessfully = self.addNewCommunityNews(message)
+                    if addedSucessfully:
+                        print("Need to find newest patch and share it")
+
                 elif "latest" in message.content:
                     url = self.getNewsURLForThisChannel(message.channel.name)
                     if url != None:
@@ -74,23 +77,30 @@ class SteamCommunityNewsBot:
 
     def addNewCommunityNews(self, message):
         returnMessage = 'Default error message'
-
+        addedSucessfully = False
         if len(message.content.split()) >= 2:
             url = message.content.split()[2]
-            # TODO: Check if it is a valid steam community link
-            newJsonEntry = {"channelId": message.channel.id,
-                            "channelName": message.channel.name,
-                            "url": url,
-                            "lastAnnouncementTitle": ""
-                            }
-            self.jsonData['Communities'].append(newJsonEntry)
-            self.writeJsonData()
-            returnMessage = "Adding new community to this channel. Expect news from the steam community at {} to be posted to this channel!".format(
-                url)
+            communityName = newsParser.getCommunityName(url)
+            if communityName != None:
+                latestAnnoucnment = newsParser.getLatestAccouncement(url)
+                newJsonEntry = {
+                                "communityName": communityName,
+                                "channelId": message.channel.id,
+                                "channelName": message.channel.name,
+                                "url": url,
+                                "lastAnnouncementTitle": latestAnnoucnment['title']
+                                }
+                self.jsonData['Communities'].append(newJsonEntry)
+                self.writeJsonData()
+                returnMessage = "Adding new community to this channel. Expect news from the steam community at {} to be posted to this channel!".format(
+                    url)
+                addedSucessfully=True
+            else:
+                returnMessage = 'Invalid URL Provided, please provide valid steam community news URL. EG: https://steamcommunity.com/app/892970/'
         else:
             returnMessage = 'Invalid URL Provided, please provide valid steam community news URL. EG: https://steamcommunity.com/app/892970/'
 
-        return returnMessage
+        return returnMessage, addedSucessfully
 
     def writeJsonData(self):
         with open(self.jsonConfigPath, 'w') as configFile:
