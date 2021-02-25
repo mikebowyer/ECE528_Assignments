@@ -43,28 +43,37 @@ class SteamCommunityNewsBot:
                     returnMsgList.append(addedSuccessFailMsg)
                     returnMsgList.append(latestAnnoucnmentMsg)
                 elif "latest" in message.content:
-                    communityNameSplit = message.content.split()[
-                                         2:]  # strip out community name from message: @SteamCommunityBot Remove <community name>
-                    communityName = " ".join(communityNameSplit)  # make a single string single spaced
+                    # strip out community name from message: @SteamCommunityBot latest <community name>
+                    communityName = " ".join(message.content.split()[2:])  # make a single string single spaced
 
                     if "all" in communityName:
                         #get all updates
                         print("All")
                     else:
-
                         embedmsg = self.getLatestAnnouncmentForCommunity(communityName)
                         if embedmsg == None:
-                            returnmsg = "No steam community of name {} is associated with this channel! Cannot get latest announcement.".format(communityName)
+                            noCommunityText = "No steam community of name {} is associated with this channel! Cannot get latest announcement.".format(communityName)
+                            noCommunityMsg = {'embed': False, 'contents': noCommunityText}
+                            returnMsgList.append(noCommunityMsg)
+                        else:
+                            latestAnnouncmentMsg = {'embed': True, 'contents': embedmsg}
+                            returnMsgList.append(latestAnnouncmentMsg)
                 elif "list" in message.content:
-                    returnmsg=self.getAllCommunityNameURLsMsg(message.channel)
-                    print("List")
-
+                    listMsg = {'embed': False, 'contents': self.getAllCommunityNameURLsMsg(message.channel)}
+                    returnMsgList.append(listMsg)
                 elif "remove" in message.content:
-                    communityNameSplit= message.content.split()[2:]#strip out community name from message: @SteamCommunityBot Remove <community name>
-                    communityName = " ".join(communityNameSplit) #make a single string single spaced
+                    #strip out community name from message: @SteamCommunityBot Remove <community name>
+                    communityName = " ".join(message.content.split()[2:])
                     removalSuccess = self.removeCommunity(communityName)
+
                     if removalSuccess:
-                        returnmsg = "Succesfully removed announcments for {} from this channel".format(communityName)
+                        successMsg = {'embed': False, 'contents': "Successfully removed announcements for {} from this channel".format(communityName)}
+                        returnMsgList.append(successMsg)
+                    else:
+                        failMsg = {'embed': False,
+                                      'contents': "Failed to removed announcements for {}, that community is not associated with this channel".format(
+                                          communityName)}
+                        returnMsgList.append(failMsg)
                 else:
                     returnmsg = self.getHelpMessage()
                 break
