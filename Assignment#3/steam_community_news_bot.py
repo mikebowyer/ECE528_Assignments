@@ -47,7 +47,7 @@ class SteamCommunityNewsBot:
                     communityName = " ".join(message.content.split()[2:])  # make a single string single spaced
 
                     if "all" in communityName:
-                        #get all updates
+                        #TODO: get all updates
                         print("All")
                     else:
                         embedmsg = self.getLatestAnnouncmentForCommunity(communityName)
