@@ -49,6 +49,11 @@ class SteamCommunityNewsBot:
                     if "all" in communityName:
                         #TODO: get all updates
                         print("All")
+                        communitiesToUpdate = self.getCommunityNamesForChannel(message.channel)
+                        for communityName in communitiesToUpdate:
+                            latestAnnouncment = self.getLatestAnnouncmentForCommunity(communityName)
+                            latestAnnoucnmentMsg = {'embed': True, 'contents': latestAnnouncment}
+                            returnMsgList.append(latestAnnoucnmentMsg)
                     else:
                         embedmsg = self.getLatestAnnouncmentForCommunity(communityName)
                         if embedmsg == None:
@@ -91,14 +96,6 @@ class SteamCommunityNewsBot:
                       + '\tlatest all - Causes latest news on all steam communities associated with this channel to be sent to this channel.\n' \
                       + '\tremove <steam community news URL> - Removes the specified steam community from this channel. \n'
         return helpMessage
-
-    def getNewsURLForThisChannel(self, channelName):
-        returnURL = None
-        for community in self.jsonData["Communities"]:
-            if channelName == community["channelName"]:
-                returnURL = community["url"]
-                break
-        return returnURL
 
     def setLatestAccouncementTitle(self, communityName, accountmentTitle):
         for community in self.jsonData["Communities"]:
@@ -199,3 +196,10 @@ class SteamCommunityNewsBot:
                 removalSuccess=True
 
         return removalSuccess
+
+    def getCommunityNamesForChannel(self, channel):
+        communityNameList = []
+        for community in self.jsonData['Communities']:
+            if community['channelId'] == channel.id:
+                communityNameList.append(community['communityName'])
+        return communityNameList
