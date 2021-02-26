@@ -174,7 +174,7 @@ class SteamCommunityNewsBot:
         returnMsg = "List of steam communities associated with this channel:\n"
         for community in self.jsonData['Communities']:
             if community['channelId'] == channel.id:
-                newStr = "\t{} - {}\n".format(community['communityName'], community['url'])
+                newStr = "\t{} - ```{}```\n".format(community['communityName'], community['url'])
                 returnMsg= returnMsg + newStr
                 community_found = True
 
