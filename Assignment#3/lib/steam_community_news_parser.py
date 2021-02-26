@@ -4,6 +4,11 @@ from bs4 import BeautifulSoup as soup
 
 
 def getLatestAccouncement(url):
+    """
+    Given a steam community URL find the details about the latest announcement.
+    :param url: URL to a steam community which the latest announcement is desired
+    :return: The latest announcement information for the provided URL
+    """
     latestAccouncement = {"title": None, "info": None, "date": None, "url": None, "img_url": None}
 
     # Make request to grab community news from steam
@@ -17,7 +22,6 @@ def getLatestAccouncement(url):
 
     # get latest anncouncment card information
     try:
-
         latestAccouncement["title"] = \
             announcmentCards[0].findAll("div", class_="apphub_CardContentNewsTitle")[0].contents[0]
         latestAccouncement["date"] = announcmentCards[0].findAll("div", class_="apphub_CardContentNewsDate")[0].text
@@ -36,6 +40,11 @@ def getLatestAccouncement(url):
 
 
 def getCommunityName(url):
+    """
+    Given a steam community URL, find the name of the community which is associated with it.
+    :param url: URL to a steam community which the name of the community is desired
+    :return: the name of the steam community for the provided URL
+    """
     communityname = None
     try:
         request = Request(url, headers={'User-Agent': 'Mozilla/5.0'})
