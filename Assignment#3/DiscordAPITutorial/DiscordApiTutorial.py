@@ -2,43 +2,51 @@ import argparse
 import discord
 import asyncio
 import time
-import tkinter as tk
-import threading
 from lib import eventCallBacks
-from functools import partial
 
 parser = argparse.ArgumentParser(description='User interface for Discord API Interaction')
 parser.add_argument('--token', help='Token to use to connect bot to channels')
-args = None
-client = discord.Client()
 
-async def say_after(delay, what):
-    # await asyncio.sleep(delay)
-    print(what)
+import discord
+import asyncio
 
-async def user_input():
-    while True:
-        usrInp = input("Enter your value: ")
-        if usrInp == "connect":
-            await say_after(1,"connect")
-        elif usrInp == "send":
-            await say_after(1, "send")
-        elif usrInp == "user":
-            await say_after(1, "user")
-        else:
-            print("Nothing")
-
-async def main():
-    print(f"started at {time.strftime('%X')}")
-
-    asyncio.create_task(user_input())
-    # await user_input(2, 'world')
-
-    print(f"finished at {time.strftime('%X')}")
+class MyClient(discord.Client):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.bg_task = None
 
 
+
+    async def on_ready(self):
+        print('Logged in as')
+        print(self.user.name)
+        print(self.user.id)
+        print('------')
+        # create the background task and run it in the background
+        self.bg_task = self.loop.create_task(self.my_background_task())
+
+    async def testSleep(self):
+        print('Staring test')
+        await asyncio.sleep(1)
+        print('finished test')
+
+    async def my_background_task(self):
+        await self.wait_until_ready()
+
+        #Get user input
+        usrInp=input("Your options are: \n\tsend - send a message\n\tinfo - view current bot info\n\tdisonnect - disconnect this bot\n\n What would you like to do?:")
+        print(usrInp)
+
+        while not self.is_closed():
+            if usrInp == "test":
+                await self.testSleep()
+            elif usrInp == "send":
+                channel = self.get_channel(1234567)  # channel ID goes here
+                await channel.send("hi")
+            await asyncio.sleep(60) # task runs every 60 seconds
 
 if __name__ == '__main__':
     print("Starting")
     args = parser.parse_args()
-    asyncio.run(main())
+    client = MyClient()
+    client.run(args.token)

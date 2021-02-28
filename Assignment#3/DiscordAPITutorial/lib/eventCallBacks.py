@@ -24,15 +24,14 @@ def showRcvdMsg():
     getUserInfoWndw.title("Recieved message")
     getUserInfoWndw.mainloop()
 
-async def connectBtnClk(connectBtn, token, client):
+async def connectClient(token, client):
     print("Connect/disconnect button pressed")
-    if connectBtn.cget('text') == "Connect bot to discord":
-        print("Connecting")
-        await client.start(token)
-        connectBtn.configure(text="Disconnect bot from discord")
-    else:
-        print("Disconnecting")
-        connectBtn.configure(text="Connect bot to discord")
+    # try:
+    #     client.run(token)
+    # except Exception as e:  # work on python 3.x
+    #     print('Failed to upload to ftp: ' + str(e))
+
+    print("Finished connecting")
 
 async def test():
     print("staring test")
