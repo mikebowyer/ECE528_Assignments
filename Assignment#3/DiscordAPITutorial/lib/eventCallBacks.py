@@ -18,5 +18,11 @@ def showRcvdMsg():
     getUserInfoWndw.title("Recieved message")
     getUserInfoWndw.mainloop()
 
-def connectBtnClk():
+def connectBtnClk(connectBtn):
     print("Connect/disconnect button pressed")
+    if connectBtn.cget('text') == "Connect bot to discord":
+        print("Connecting")
+        connectBtn.configure(text="Disconnect bot from discord")
+    else:
+        print("Disconnecting")
+        connectBtn.configure(text="Connect bot to discord")

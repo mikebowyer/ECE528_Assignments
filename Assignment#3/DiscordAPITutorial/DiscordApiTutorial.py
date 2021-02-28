@@ -3,6 +3,7 @@
 import argparse, asyncio, discord, sys, time
 import tkinter as tk
 from lib import eventCallBacks
+from functools import partial
 
 parser = argparse.ArgumentParser(description='Bot to check for latest patches for a steam community news')
 parser.add_argument('--token', help='Token to use to connect bot to channels')
@@ -22,11 +23,11 @@ getUserInfoBtn = tk.Button(
     text="Get user information",
     command=eventCallBacks.getUserInfoBtnClk,
 )
-connect = tk.Button(
+connectBtn = tk.Button(
     text="Connect bot to discord",
-
 )
-connect.pack()
+connectBtn.configure(command=partial(eventCallBacks.connectBtnClk,connectBtn))
+connectBtn.pack()
 sendMsgBtn.pack()
 getUserInfoBtn.pack()
 
