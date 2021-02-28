@@ -35,10 +35,11 @@ class MyClient(discord.Client):
 
         while not self.is_closed():
             usrInp = input(
-                "Your options are: \n\tsend - send a message\n\tinfo - view current bot info\n\tdisonnect - disconnect this bot\n\n What would you like to do?:")
+                "\n\nYour options are: \n\tsend - send a message\n\tinfo - view current bot info\n\tdisonnect - disconnect this bot\n\n What would you like to do?:")
 
             if usrInp == "info":
-                await self.testSleep()
+                await self.printBotInfo()
+                # await self.testSleep()
             elif usrInp == "send":
                 channel = self.get_channel(1234567)  # channel ID goes here
                 await channel.send("hi")
@@ -46,8 +47,22 @@ class MyClient(discord.Client):
                 print("Disconnecting...")
             await asyncio.sleep(1) # task runs every 60 seconds
 
+    async def printBotInfo(self):
+        print("-----------BOT INFORMATION----------")
+        print("Connection state: {}".format(self.is_ready()))
+        print("Username: {}".format(self.user.name))
+        print("User ID: {}".format(self.user.id))
+        print("Connection state: {}".format(client.is_ready()))
+        print("Guilds bot belongs to:")
+        guilds = await client.fetch_guilds(limit=10).flatten()
+        for guild in self.guilds:
+            print("\t{}".format(guild))
+            print("\tNumber of members: {}".format(guild.member_count))
+            print("\tNumber of channels: {}".format(len(guild.channels)))
+
 if __name__ == '__main__':
     print("Starting")
     args = parser.parse_args()
-    client = MyClient()
+    intents = discord.Intents(messages=True, guilds=True,members=True)
+    client = MyClient(intents=intents)
     client.run(args.token)
