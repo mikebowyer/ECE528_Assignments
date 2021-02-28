@@ -41,8 +41,7 @@ class MyClient(discord.Client):
                 await self.printBotInfo()
                 # await self.testSleep()
             elif usrInp == "send":
-                channel = self.get_channel(1234567)  # channel ID goes here
-                await channel.send("hi")
+                await self.handleSendMsg()
             elif usrInp == "disconnect":
                 print("Disconnecting...")
             await asyncio.sleep(1) # task runs every 60 seconds
@@ -59,6 +58,29 @@ class MyClient(discord.Client):
             print("\t{}".format(guild))
             print("\tNumber of members: {}".format(guild.member_count))
             print("\tNumber of channels: {}".format(len(guild.channels)))
+
+    async def handleSendMsg(self):
+        inputguild = input("What guild would you like to send a message on?")
+
+        foundGuild=False
+        foundChannel=False
+        for guild in self.guilds:
+            if inputguild in guild.name:
+                foundGuild=True
+                inputchannel = input("What channel would you like to send a message on?")
+                for channel in guild.channels:
+                    if inputchannel in channel.name:
+                        foundChannel=True
+                        msgcontent = input("What should the message be?")
+                        print(
+                            "Sending the follow message to the {} in the guild {}:\n{}".format(guild.name, channel.name,
+                                                                                               msgcontent))
+                        await channel.send(msgcontent)
+
+        if not foundGuild:
+            print("Could not find a guild by that name.")
+        elif not foundChannel:
+            print("Could not find a channel by that name.")
 
 if __name__ == '__main__':
     print("Starting")
