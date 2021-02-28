@@ -17,3 +17,6 @@ def showRcvdMsg():
     getUserInfoWndw = tk.Tk()
     getUserInfoWndw.title("Recieved message")
     getUserInfoWndw.mainloop()
+
+def connectBtnClk():
+    print("Connect/disconnect button pressed")
