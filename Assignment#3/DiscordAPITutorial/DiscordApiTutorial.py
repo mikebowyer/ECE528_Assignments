@@ -33,17 +33,18 @@ class MyClient(discord.Client):
     async def my_background_task(self):
         await self.wait_until_ready()
 
-        #Get user input
-        usrInp=input("Your options are: \n\tsend - send a message\n\tinfo - view current bot info\n\tdisonnect - disconnect this bot\n\n What would you like to do?:")
-        print(usrInp)
-
         while not self.is_closed():
-            if usrInp == "test":
+            usrInp = input(
+                "Your options are: \n\tsend - send a message\n\tinfo - view current bot info\n\tdisonnect - disconnect this bot\n\n What would you like to do?:")
+
+            if usrInp == "info":
                 await self.testSleep()
             elif usrInp == "send":
                 channel = self.get_channel(1234567)  # channel ID goes here
                 await channel.send("hi")
-            await asyncio.sleep(60) # task runs every 60 seconds
+            elif usrInp == "disconnect":
+                print("Disconnecting...")
+            await asyncio.sleep(1) # task runs every 60 seconds
 
 if __name__ == '__main__':
     print("Starting")
