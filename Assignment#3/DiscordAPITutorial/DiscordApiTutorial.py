@@ -1,7 +1,7 @@
 import argparse
 import discord
 import asyncio
-import time
+import time,sys
 from lib import eventCallBacks
 
 parser = argparse.ArgumentParser(description='User interface for Discord API Interaction')
@@ -15,7 +15,9 @@ class MyClient(discord.Client):
         super().__init__(*args, **kwargs)
         self.bg_task = None
 
-
+    async def on_message(self,message):
+        print("Recieved new message!")
+        print("The following message was recieved on the channel {} in the guild {}:\n{}".format(message.channel,message.guild,message.content))
 
     async def on_ready(self):
         print('Logged in as')
@@ -24,11 +26,6 @@ class MyClient(discord.Client):
         print('------')
         # create the background task and run it in the background
         self.bg_task = self.loop.create_task(self.my_background_task())
-
-    async def testSleep(self):
-        print('Staring test')
-        await asyncio.sleep(1)
-        print('finished test')
 
     async def my_background_task(self):
         await self.wait_until_ready()
@@ -43,8 +40,13 @@ class MyClient(discord.Client):
             elif usrInp == "send":
                 await self.handleSendMsg()
             elif usrInp == "disconnect":
-                print("Disconnecting...")
-            await asyncio.sleep(1) # task runs every 60 seconds
+                await self.logout()
+                sys.exit()
+            else:
+                print("Incorrect option, please try again.")
+            await asyncio.sleep(1) # task runs every 1
+        print("Client has been disconnected, exiting!")
+        return
 
     async def printBotInfo(self):
         print("-----------BOT INFORMATION----------")
@@ -61,7 +63,6 @@ class MyClient(discord.Client):
 
     async def handleSendMsg(self):
         inputguild = input("What guild would you like to send a message on?")
-
         foundGuild=False
         foundChannel=False
         for guild in self.guilds:
@@ -87,4 +88,6 @@ if __name__ == '__main__':
     args = parser.parse_args()
     intents = discord.Intents(messages=True, guilds=True,members=True)
     client = MyClient(intents=intents)
+
     client.run(args.token)
+
