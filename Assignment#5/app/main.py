@@ -85,3 +85,32 @@ async def check_EPL_team(teamName: str):
         'teamNameQueried': teamName,
         'matchingTeams': findTeam(teamName)
     }
+
+@app.post("/add/{league}/{team}")
+async def addTeamToLeague(league: str,team: str):
+    if league == "NFL":
+        NFL_Teams.append(team)
+        return {
+            'leagueAddedTo': "NFL",
+            'teamNameAdded': team,
+            'NFL Teams': NFL_Teams
+        }
+    elif league == "NBA":
+        NBA_Teams.append(team)
+        return {
+            'leagueAddedTo': "NBA",
+            'teamNameAdded': team,
+            'NBA Teams': NBA_Teams
+        }
+    elif league == "EPL":
+        EPL_Teams.append(team)
+        return {
+            'leagueAddedTo': "EPL",
+            'teamNameAdded': team,
+            'EPL Teams': EPL_Teams
+        }
+    else:
+        return {
+            "Failure": "True"
+        }
+    
