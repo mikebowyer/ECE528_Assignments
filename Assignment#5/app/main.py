@@ -114,7 +114,7 @@ async def addTeamToLeague(league: str,teamName: str):
             "Failure": "True"
         }
     
-@app.put("/update/{league}/{teamNameToUpdate}/{NewName}")
+@app.put("/{league}/{teamNameToUpdate}/{NewName}")
 async def addTeamToLeague(league: str,teamNameToUpdate: str, NewName: str):
     teams = None
     if league == "NFL":
@@ -131,6 +131,31 @@ async def addTeamToLeague(league: str,teamNameToUpdate: str, NewName: str):
     for i, teamName in enumerate(teams):
         if teamName == teamNameToUpdate:
             teams[i]= NewName
+    return{
+        "UpdateLeageTeams":teams
+    }
+
+@app.delete("/{league}/{teamNameToDelete}")
+async def addTeamToLeague(league: str,teamNameToDelete: str):
+    teams = None
+    if league == "NFL":
+        teams = NFL_Teams
+    elif league == "NBA":
+        teams = NBA_Teams
+    elif league == "EPL":
+        teams = EPL_Teams
+    else:
+        return {
+            "Failure": "True"
+        }
+
+    indexToDelete=None
+    for i, teamName in enumerate(teams):
+        if teamName == teamNameToDelete:
+            indexToDelete=i
+
+    if indexToDelete != None:
+        teams.pop(indexToDelete)
     return{
         "UpdateLeageTeams":teams
     }
