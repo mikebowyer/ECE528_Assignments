@@ -86,27 +86,27 @@ async def check_EPL_team(teamName: str):
         'matchingTeams': findTeam(teamName)
     }
 
-@app.post("/add/{league}/{team}")
-async def addTeamToLeague(league: str,team: str):
+@app.post("/add/{league}/{teamName}")
+async def addTeamToLeague(league: str,teamName: str):
     if league == "NFL":
         NFL_Teams.append(team)
         return {
             'leagueAddedTo': "NFL",
-            'teamNameAdded': team,
+            'teamNameAdded': teamName,
             'NFL Teams': NFL_Teams
         }
     elif league == "NBA":
-        NBA_Teams.append(team)
+        NBA_Teams.append(teamName)
         return {
             'leagueAddedTo': "NBA",
-            'teamNameAdded': team,
+            'teamNameAdded': teamName,
             'NBA Teams': NBA_Teams
         }
     elif league == "EPL":
-        EPL_Teams.append(team)
+        EPL_Teams.append(teamName)
         return {
             'leagueAddedTo': "EPL",
-            'teamNameAdded': team,
+            'teamNameAdded': teamName,
             'EPL Teams': EPL_Teams
         }
     else:
@@ -114,3 +114,23 @@ async def addTeamToLeague(league: str,team: str):
             "Failure": "True"
         }
     
+@app.put("/update/{league}/{teamNameToUpdate}/{NewName}")
+async def addTeamToLeague(league: str,teamNameToUpdate: str, NewName: str):
+    teams = None
+    if league == "NFL":
+        teams = NFL_Teams
+    elif league == "NBA":
+        teams = NBA_Teams
+    elif league == "EPL":
+        teams = EPL_Teams
+    else:
+        return {
+            "Failure": "True"
+        }
+
+    for i, teamName in enumerate(teams):
+        if teamName == teamNameToUpdate:
+            teams[i]= NewName
+    return{
+        "UpdateLeageTeams":teams
+    }
