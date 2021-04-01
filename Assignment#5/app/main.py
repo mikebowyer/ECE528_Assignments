@@ -60,7 +60,7 @@ async def get_NFL_teams():
     }
 
 @app.get("/NFL/{teamName}")
-async def check_NBA_team(teamName: str):
+async def check_NFL_team(teamName: str):
     return {
         'teamNameQueried': teamName,
         'matchingNFLteams': isTeamInNFL(teamName)
@@ -80,7 +80,7 @@ async def check_EPL_team(teamName: str):
     }
 
 @app.get("/findTeam/{teamName}")
-async def check_EPL_team(teamName: str):
+async def find_team(teamName: str):
     return {
         'teamNameQueried': teamName,
         'matchingTeams': findTeam(teamName)
@@ -115,7 +115,7 @@ async def addTeamToLeague(league: str,teamName: str):
         }
     
 @app.put("/{league}/{teamNameToUpdate}/{NewName}")
-async def addTeamToLeague(league: str,teamNameToUpdate: str, NewName: str):
+async def update_teamname(league: str,teamNameToUpdate: str, NewName: str):
     teams = None
     if league == "NFL":
         teams = NFL_Teams
@@ -136,7 +136,7 @@ async def addTeamToLeague(league: str,teamNameToUpdate: str, NewName: str):
     }
 
 @app.delete("/{league}/{teamNameToDelete}")
-async def addTeamToLeague(league: str,teamNameToDelete: str):
+async def delete_team(league: str,teamNameToDelete: str):
     teams = None
     if league == "NFL":
         teams = NFL_Teams

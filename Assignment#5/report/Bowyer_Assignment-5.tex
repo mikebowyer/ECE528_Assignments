@@ -48,148 +48,102 @@ Midterm Tutorial Execution: Deploying an API with AWS Lambda and AWS API Gateway
 
 \doublespacing
 
-\section{Statement of the Problem}
+\section{Assignment Description}
 
+This assignment entails following the prescribed exercise steps created by another student in the ECE 528 course. The excersise steps I have selected for this assignment is that made by Jake Huneau, who describes what steps to take to utilize AWS Lambda and API Gateway for hosting an API.
 
-\pagebreak
-\section{Description of Solution}
-
-
-
-\singlespacing
-\begin{lstlisting}
-	usage: Assignment2.py [-h] [--student-list STUDENT_LIST] [--output-image-dir OUTPUT_IMAGE_DIR] [-fd]
-
-	Read in student list csv file, then plot all head shots with names. Optionally run facial detection.
-	
-	optional arguments:
-	  -h, --help            show this help message and exit
-	  --student-list STUDENT_LIST
-							Path to student list
-	  --output-image-dir OUTPUT_IMAGE_DIR
-							Path to directory where to save output student matrix image
-	  -fd, --run-face-detection
-							Set when you want to run facial detection for each student image
-\end{lstlisting}
-\doublespacing
-
-The main function of this program is shown in the below code snippet. Most lines are function calls which are defined in other created files under the lib folder, namely student\_info and img\_utils. The student\_info library contains classes for storing and creating new students and the img\_utils library is responsible for downloading, plotting, and running facial detection on images. Each line of the code snippet contains an important functionality of the program and is accompanied by a descriptive comment. Each step of the program is further described in the itemized list below the code snippet.
-
-\singlespacing
-\begin{lstlisting}[language=Python]
-	from lib import student_info
-	from lib import imgs_utils
-	
-	#1. Grab argument of location of image, and master information csv
-		args = parser.parse_args()
-		studentListFilePath = args.student_list
-		outputImgDir = args.output_image_dir
-		if not os.path.exists(outputImgDir):
-			os.makedirs(outputImgDir)
-
-	#2. Read in csv file
-		studentInfos = student_info.Students(studentListFilePath)
-
-	#3. Download Images and update students image file path
-		validStudents = imgs_utils.download_images_update_students(studentInfos, outputImgDir)
-
-	#4. Sort students based on last name
-		validStudents.sort(key=lambda x: x.lastname)
-
-	#5. Display images
-		imgs_utils.plot_all_students(validStudents)
-
-	#6. Run facial recognition detection
-		if(args.run_face_detection):
-			imgs_utils.runFacialDetection(validStudents)
-	
-\end{lstlisting}
-\doublespacing
-Here is a further description of each step.
+The steps described in the exercise of his tutorial indicate the following:
 \begin{enumerate}
-	\item Arugment parsing reads the arguments passed to the program: source student list, output image directory, flag to run facial detection.
-	\item Student file reading reads in all student information from the input source student list and stores them in the variable studentInfos.
-	\item All student information from studentInfos is then passed to a created function called download\_images\_update\_students(), which downloads all images from the studentInfo, then appends the local path to where the image was stored locally. All students which an image was sucessfully downloaded for are then returned and saved in validStudents.
-	\item The students are sorted in place by last name.
-	\item All student images are then combined into a single matrix, then this matrix is saved locally.
-	\item Finally, if the user wants to run facial detection, then the program will grab the image for the first student in the list, find and plot bounding boxes around any found faces. This image will be displayed in a popup. This popup is shown until the user of the program presses another key which indicates they want to look at the next image. When the user presses a key, the existing popup is replaced with the output of the facial detection on the next students image. This repeats until all images are exhausted or the program is terminated.
+	\item Update your API code so it includes a POST, PUT, and DELETE HTTP method
+	\item Upload your code to AWS Lambda using AWS s3 instead of uploading a zip
+	\item Set up another AWS Lambda function for a production version of your code
+	\item Set up your code pipeline so it automatically uploads changes to your code to AWS Lambda and also updates the dev version of API Gateway
 \end{enumerate}
 
-\pagebreak
-\section{Encountered Problems}
-There were a few problems which were encountered while developing this solution. These are briefly described in the following list along with the solution used:
+The items themselves are a little confusing, as it appears item number three is redundant of item one. Item one indicates the creation of a new API with mutliple methods, while item three indicates the setup of a new lambda function. Therefore, I have combined items one and three into the creation of a single lamda function which is for a new API I have written. Item two is deploying it using AWS S3 rather than the inline editor which is described in the following sections. Item four, however, is unfortunately vague and lacking details in the tutorial itself, so it isn't clear how to complete this step due to the fact that it appears to rely on other AWS services not described in the tutorial such as AWS CodePipeline. Instead of conducitng this step, proof that the API has been sucessully deployed to AWS API Gateway is provided.
+
+\section{Description of work done}
+\subsection{Update your API code so it includes a POST, PUT, and DELETE HTTP method}
+
+The first step I took to accomplishing the excersises was to make my own API which differences from the tutorial so that I could gain knowledge of how to do so. The API I made was a simple sports team finder/editor one. The general idea is that someone can query the API to do the following:
 \begin{enumerate}
-	\item Students had incorrect URLs - The solution used was to create a list of valid students, which only contained students who an image could be sucessfully downloaded for.
-	\item Student images had same file name - the solution for this problem was to check if there was a image already saved locally with the same name which the download image would be saved to. If there was an existing file name with the same name, then the newly downloaded image would be renamed to include the students name. This can be seen in some of the output section debug statements.
-	\item Facial detection did not always detect faces - The facial detection algorithm used is imperfect and is not able to detect faces in all images. The best solution found was to play with the detection parameters to try to make it work well for the dataset of student images.
+	\item Get all of the team names in the NFL, NBA, or EPL (GET)
+	\item Find if a team exists in any of those leagues (GET)
+	\item Find what league a team belongs to (GET)
+	\item Add a new team to a league (POST)
+	\item Update a team name (PUT)
+	\item Delete a team from a league (DELETE)
 \end{enumerate}
 
-\pagebreak
-\section{Testing and Output}
-Below is the output log of the program when the user of the program cycled through three student images. There would be further debug statements with "faces found", but the program was terminated early for the sake of brevity. The output matrix of student images can be seen in figure \ref{studentMatrix} and a few example output images from the facial detection algorithm can be be seen in figure \ref{facialDetect}.
-
-\singlespacing
-\begin{lstlisting}
-	python.exe Assignment2.py --student-list ./StudentInformation.csv --output-image-dir ./StudentImages --run-face-detection
-	INFO: Parsing input arguments
-	INFO: Input student information file: ./StudentInformation.csv
-	INFO: Saving downloaded images to: ./StudentImages
-	INFO: Reading in student information
-	INFO: Downloading student images locally
-	DEBUG: Image for Ahmed Zaki sucessfully Downloaded: meface.jpg
-	DEBUG: Image for Michael Bowyer sucessfully Downloaded: BowyerHeadshot_150x150.PNG
-	DEBUG: Image for Hamka Maya sucessfully Downloaded: me.png
-	DEBUG: Image for Ponkshe Aishwarya sucessfully Downloaded: AP.png
-	DEBUG: Image for Brown Patrick sucessfully Downloaded: SMALL.PORTRAIT2.png
-	DEBUG: Image for Delisi Justin sucessfully Downloaded: headshot.png
-	DEBUG: Image for Daniel Zajac sucessfully Downloaded: dz_150x150.jpg
-	DEBUG: Image for Steiner Tristan sucessfully Downloaded: Steiner_photo_150x150.jpg
-	DEBUG: Image for VK Reshma sucessfully Downloaded: reshmavk-150x150.png
-	DEBUG: Image for Topolovec Kenny sucessfully Downloaded: KennyTopolovec_150_150.jpg
-	DEBUG: Image for Benczarski Joe sucessfully Downloaded: joe_150x150.png
-	DEBUG: Image for Paul Graff sucessfully Downloaded: PaulGraffPictureForECE528_2.jpg
-	DEBUG: Image for Bhopatrao Prachi sucessfully Downloaded: prachi_img_new.png
-	DEBUG: Image for Ujjwal Pratul sucessfully Downloaded: image.jpg
-	DEBUG: Image for Bhor Sonal sucessfully Downloaded: SonalBhor.png
-	DEBUG: Image for Chinnireddy Balaji sucessfully Downloaded: image.png
-	DEBUG: Image for Fozey Alqirsh sucessfully Downloaded: fozey.png
-	DEBUG: Image for Bokhari Aidan sucessfully Downloaded: HowDoYouDoFellowKids.png
-	DEBUG: Image name for Sivagiri Manjunadh already exists, renaming
-	DEBUG: Image for Sivagiri Manjunadh sucessfully Downloaded: Sivagiri_Manjunadh_Image.jpg
-	DEBUG: Image for Bhatti Tejbir sucessfully Downloaded: IMG.png
-	DEBUG: Image for Patel Kush sucessfully Downloaded: kush.png
-	DEBUG: Image for Gilkey Kelsey sucessfully Downloaded: KG428.png
-	DEBUG: Image for Blum Bruce sucessfully Downloaded: myImage.png
-	DEBUG: Image for Khambam Sanjaykumar sucessfully Downloaded: Sanjay.png
-	DEBUG: Image for Hourani Hadi sucessfully Downloaded: Hourani.png
-	DEBUG: Image for Virigineni Srija sucessfully Downloaded: myimage.jpg
-	DEBUG: Image for Patel Amar sucessfully Downloaded: small.png
-	INFO: Sorting students by last name
-	INFO: Generating matrix of student images
-	INFO: Running facial detection on each student image
-	DEBUG: Found 1 faces!
-	DEBUG: Found 1 faces!
-	DEBUG: Found 1 faces!	
-\end{lstlisting}
-\doublespacing
-
+Each of these API calls are demonstrated in the below images locally using uvicorn and fastapi as described in the tutorial.
 \begin{figure}[htbp]
-	\centerline{\includegraphics[scale=.4]{students.png}}
-	\caption{Output student image matrix}
-	\label{studentMatrix}
+	\centerline{\includegraphics[scale=.4]{4/Get_NBA.png}}
+	\caption{GET API function definition for obtaining all NBA team list }
+	\label{getNBA}
 \end{figure}
 
 \begin{figure}[htbp]
-	\centerline{\includegraphics[scale=.75]{FacialDetectionImages/FacialDetection.png}}
-	\caption{Three example output images from facial detection algorithm}
-	\label{facialDetect}
+	\centerline{\includegraphics[scale=.4]{4/Get_NBA_team.png}}
+	\caption{GET API function definition for getting NBA teams which meets a given name}
+	\label{getNBATeam}
 \end{figure}
 
+\begin{figure}[htbp]
+	\centerline{\includegraphics[scale=.4]{4/Get_FindTeam.png}}
+	\caption{GET API function definition for finding any team in any league which meets a given name}
+	\label{getfindTeam}
+\end{figure}
+
+\begin{figure}[htbp]
+	\centerline{\includegraphics[scale=.4]{4/Post_mikesteam.png}}
+	\caption{POST API function definition for adding a new team to a given league}
+	\label{postTeam}
+\end{figure}
+
+\begin{figure}[htbp]
+	\centerline{\includegraphics[scale=.4]{4/put_Arsenal2.png}}
+	\caption{PUT API function definition for updating a team name in a given league}
+	\label{putTeam}
+\end{figure}
+
+\begin{figure}[htbp]
+	\centerline{\includegraphics[scale=.4]{4/delete_aresnal2.png}}
+	\caption{DELETE API function definition for deleting a team name in a given league}
+	\label{deleteTeam}
+\end{figure}
 \pagebreak
+
+\subsection{Upload your code to AWS Lambda using AWS s3 instead of uploading a zip}
+It is a little difficult to prove that an AWS lambda function is actually using a zip file, but the following images are my best attempt to prove that it was completed.
+
+\begin{figure}[htbp]
+	\centerline{\includegraphics[scale=.4]{1/sucessfulUpdate.png}}
+	\caption{Proof of successful update of lambda function after connecting it to S3 storage }
+	\label{sucessfulUpdate}
+\end{figure}
+\begin{figure}[htbp]
+	\centerline{\includegraphics[scale=.4]{1/S3_Proof.png}}
+	\caption{Proof of existing S3 bucket containing API code}
+	\label{S3Proof}
+\end{figure}
+
+\subsection{Connect AWS Lambda Function to API Gateway}
+Finally, the API developed was connected to the API Gateway and the GET methods were tested. The below images show the result of the tests.
+
+\begin{figure}[htbp]
+	\centerline{\includegraphics[scale=.4]{3/NFLResult.png}}
+	\caption{Proof of NFL GET method returns all NFL teams from AWS API Gateway URL }
+	\label{getNFL}
+\end{figure}
+\begin{figure}[htbp]
+	\centerline{\includegraphics[scale=.4]{3/NFLLions.png}}
+	\caption{Proof of NFL GET method returns Detroit Lions when queried for "Lions"}
+	\label{getLions}
+\end{figure}
 
 \section{Code}
 
-All code generated within scope of this assignment can be found in the Assignment 2 folder in the GitHub repository:
+All code generated within scope of this assignment can be found in the Assignment 5 folder in the GitHub repository:
 \url{https://github.com/mikebowyer/ECE528_Assignments}.
 
 
